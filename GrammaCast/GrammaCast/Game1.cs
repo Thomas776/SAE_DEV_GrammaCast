@@ -2,12 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace GrammaCast
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public GraphicsDeviceManager _graphics;
+        public SpriteBatch _spriteBatch;
+
+        Hero heroMage;
 
         public Game1()
         {
@@ -20,6 +23,7 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
+            heroMage = new Hero("Hero.sf",);
             base.Initialize();
         }
 
@@ -27,7 +31,7 @@ namespace GrammaCast
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //a.LoadContent(Content);
+            heroMage.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
         }
@@ -37,7 +41,7 @@ namespace GrammaCast
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //a.Update(gameTime);
+            heroMage.Update(gameTime);
 
             // TODO: Add your update logic here
 
@@ -47,7 +51,7 @@ namespace GrammaCast
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //a.Draw(_spriteBatch);
+            heroMage.Draw(gameTime, _spriteBatch);
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

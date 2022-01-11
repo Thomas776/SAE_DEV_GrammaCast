@@ -27,6 +27,8 @@ namespace GrammaCast
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //a.LoadContent(Content);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -34,6 +36,8 @@ namespace GrammaCast
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            //a.Update(gameTime);
 
             // TODO: Add your update logic here
 
@@ -43,7 +47,7 @@ namespace GrammaCast
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            //a.Draw(_spriteBatch);
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

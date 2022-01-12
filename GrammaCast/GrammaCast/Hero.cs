@@ -25,7 +25,7 @@ namespace GrammaCast
         {
 
             SpriteSheet spriteSheet = Content.Load<SpriteSheet>(Path, new JsonContentLoader());
-            AnimatedSprite asHero = new AnimatedSprite(spriteSheet);
+            this.ASHero = new AnimatedSprite(spriteSheet);
         }
 
         public void Update(GameTime gameTime)

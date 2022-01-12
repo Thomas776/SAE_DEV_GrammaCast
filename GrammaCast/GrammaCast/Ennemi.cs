@@ -6,5 +6,7 @@ namespace GrammaCast
 {
     class Ennemi
     {
+
+
     }
 }

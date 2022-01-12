@@ -1,0 +1,54 @@
+{
+  "textureAtlas": {
+    "texture": "Boss.png",
+    "regionWidth": 200,
+    "regionHeight": 200
+  },
+  "cycles": {
+    "idleBoss": {
+      "frames": [0,1,2,3],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "lightBoss": {
+      "frames": [10,11,12,13,14,15,16,17],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackBrasBoss": {
+      "frames": [20,21,22,23,24,25,26,27,28],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "lightHeadBoss": {
+      "frames": [50,51,52,53,54,55,56],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "attackArmureBoss": {
+      "frames": [60,61,62,63,64,65,66,67,68,69],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "deathoreveilBoss": {
+      "frames": [70,71,72,73,74,75,76,77,78,79,80,81,82,83],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleDeathBoss": {
+      "frames": [81,82,83],
+      "isLooping": false,
+      "frameDuration": 0.6
+    },
+    "eveilBoss": {
+      "frames": [83,82,81,80,79,78,77,76,75,74,73,72,71,70,69,68,67,66,65,64,63,62,61,60],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleéveilBoss": {
+      "frames": [83],
+      "isLooping": false,
+      "frameDuration": 0.2
+    }
+  }
+}

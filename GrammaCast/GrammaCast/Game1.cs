@@ -10,26 +10,27 @@ namespace GrammaCast
     {
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
-        private readonly ScreenManager _screenManager;
         public SpriteBatch SpriteBatch { get; set; }
         Hero heroMage;
         Map mapDebug;
+        Boss bossGolem;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _screenManager = new ScreenManager();
-            Components.Add(_screenManager);
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
 
-            heroMage = new Hero("HeroSprite.sf", new Vector2(200,200),100);
+
+            bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
+            heroMage = new Hero("HeroSprite.sf", new Vector2(200, 200), 100);
             mapDebug = new Map("debogmap");
+
             base.Initialize();
         }
 
@@ -40,7 +41,9 @@ namespace GrammaCast
             _graphics.PreferredBackBufferWidth = mapDebug.TileMap.Height * mapDebug.TileMap.TileHeight;
             _graphics.PreferredBackBufferHeight = mapDebug.TileMap.Width * mapDebug.TileMap.TileWidth;
             _graphics.ApplyChanges();
+            bossGolem.LoadContent(Content);
             heroMage.LoadContent(Content);
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -50,7 +53,9 @@ namespace GrammaCast
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             mapDebug.Update(gameTime);
+            bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
 
             // TODO: Add your update logic here
 
@@ -63,6 +68,7 @@ namespace GrammaCast
             //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             _spriteBatch.Begin();
             mapDebug.Draw();
+            bossGolem.Draw(gameTime, _spriteBatch);
             heroMage.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
             // TODO: Add your drawing code here

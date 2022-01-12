@@ -9,8 +9,6 @@ namespace GrammaCast
 {
     public class Hero
     {
-        private Game1 _myGame; // pour récupérer le jeu en cours
-        private Vector2 positionHero;
         private int vitesseHero;
         private AnimatedSprite asHero;
         private string path;

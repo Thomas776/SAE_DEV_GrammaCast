@@ -23,7 +23,7 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
-            heroMage = new Hero("Hero.sf",);
+            heroMage = new Hero("Hero.sf", new Vector2(200,200),50);
             base.Initialize();
         }
 

@@ -10,11 +10,11 @@ namespace GrammaCast
     public class Hero
     {
         private Vector2 positionHero;
-        private Vector2 vitesseHero;
+        private int vitesseHero;
         private AnimatedSprite asHero;
         private string path;
 
-        public Hero(string path, Vector2 positionHero, Vector2 vitesseHero)
+        public Hero(string path, Vector2 positionHero, int vitesseHero)
         {
             Path = path;
             PositionHero = positionHero;
@@ -55,10 +55,10 @@ namespace GrammaCast
             get => positionHero;
             private set => positionHero = value;
         }
-        public Vector2 VitesseHero
+        public int VitesseHero
         {
             get => VitesseHero;
-            private set => VitesseHero = value;
+            private set => vitesseHero = value;
         }
 
     }

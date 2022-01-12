@@ -7,10 +7,11 @@ using MonoGame.Extended.Tiled.Renderers;
 
 namespace GrammaCast
 {
-    class Map
+    public class Map
     {
-        private TiledMap tiledMap;
-        private TiledMapRenderer tiledMapRenderer;
+        private TiledMap tileMap;
+        private TiledMapRenderer tileMapRenderer;
+        private TiledMapTileLayer tileMapLayer;
         private string path;
 
         public Map(string path) 
@@ -20,33 +21,39 @@ namespace GrammaCast
 
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content, GraphicsDevice gd)
         {
-            this.TiledMap = Content.Load<TiledMap>(this.Path);
-            this.TiledMapRenderer = new TiledMapRenderer(gd, this.TiledMap);
+            this.TileMap = Content.Load<TiledMap>(this.Path);
+            this.TileMapRenderer = new TiledMapRenderer(gd, this.TileMap);
+            //this.TiledMapLayer = this.TiledMap.GetLayer<TiledMapTileLayer>("Calque de Tuiles 2");
+            
         }
         public void Update(GameTime gameTime)
         {
-            this.TiledMapRenderer.Update(gameTime);
+            this.TileMapRenderer.Update(gameTime);
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            spriteBatch.Begin();
-            this.TiledMapRenderer.Draw();
-            spriteBatch.End();
+            this.TileMapRenderer.Draw();
         }
+
         public string Path
         {
             get => path;
             private set => path = value;
         }
-        public TiledMap TiledMap
+        public TiledMap TileMap
         {
-            get => tiledMap;
-            private set => tiledMap = value;
+            get => tileMap;
+            private set => tileMap = value;
         }
-        public TiledMapRenderer TiledMapRenderer
+        public TiledMapRenderer TileMapRenderer
         {
-            get => tiledMapRenderer;
-            private set => tiledMapRenderer = value;
+            get => tileMapRenderer;
+            private set => tileMapRenderer = value;
+        }
+        public TiledMapTileLayer TildMapLayer
+        {
+            get => tileMapLayer;
+            private set => tileMapLayer = value;
         }
     }
 }

@@ -34,7 +34,7 @@
 		<None Update="Content\Hero.png">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-		<None Update="Content\Hero.sf">
+		<None Update="Content\HeroSprite.sf">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="Content\Hero_Arme.png">

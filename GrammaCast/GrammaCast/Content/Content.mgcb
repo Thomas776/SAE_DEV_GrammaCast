@@ -18,10 +18,10 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin DebugMap.tmx
+#begin debogmap.tmx
 /importer:TiledMapImporter
 /processor:TiledMapProcessor
-/build:DebugMap.tmx
+/build:debogmap.tmx
 
 #begin Hero.png
 /importer:TextureImporter
@@ -34,6 +34,17 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hero.png
+
+#begin HeroSprite.sf
+/importer:SpriteFactoryContentImporter
+/processor:SpriteFactoryContentProcessor
+/processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
+/build:HeroSprite.sf
+
+#begin test.tsx
+/importer:TiledMapTilesetImporter
+/processor:TiledMapTilesetProcessor
+/build:test.tsx
 
 #begin TileSetDebug.png
 /importer:TextureImporter

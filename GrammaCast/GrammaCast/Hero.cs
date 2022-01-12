@@ -25,13 +25,13 @@ namespace GrammaCast
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
 
-            SpriteSheet spriteSheet = Content.Load<SpriteSheet>(Path, new JsonContentLoader());
+            SpriteSheet spriteSheet = Content.Load<SpriteSheet>(this.Path, new JsonContentLoader());
             this.ASHero = new AnimatedSprite(spriteSheet);
         }
 
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
-            string animation;
+            string animation = "idleSprite";
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float walkSpeed = deltaSeconds * this.VitesseHero;
 
@@ -74,16 +74,15 @@ namespace GrammaCast
                 animation = "walkSouth";
                 this.PositionHero.Y += walkSpeed;
             }
-            else animation = "idleSouth";
+            else animation = "idleSprite";
+
 
             this.ASHero.Play(animation);
             this.ASHero.Update(gameTime);
         }
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Begin();
             _spriteBatch.Draw(this.ASHero, this.PositionHero);
-            _spriteBatch.End();
         }
 
         public string Path

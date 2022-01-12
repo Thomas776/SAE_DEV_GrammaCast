@@ -5,18 +5,18 @@
     "regionHeight": 63
   },
   "cycles": {
-    "idle": {
-      "frames": [24],
+    "idleSprite": {
+      "frames": [26],
       "isLooping": false,
       "frameDuration": 0.5
     },
     "walkSouth": {
-      "frames": [25,26,27,28,29,30,31,32],
+      "frames": [ 27, 28, 29, 30, 31, 32, 33, 34 ],
       "isLooping": false,
       "frameDuration": 0.2
     },
     "walkEast": {
-      "frames": [37,38,39,40,41,42,43,44],
+      "frames": [ 40, 41, 42, 43, 44, 45, 46, 47 ],
       "isLooping": false,
       "frameDuration": 0.2
     },
@@ -36,7 +36,7 @@
       "frameDuration": 0.2
     },
     "idleDeath": {
-      "frames": [53],
+      "frames": [57],
       "isLooping": false,
       "frameDuration": 0.2
     }

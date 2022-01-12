@@ -28,8 +28,8 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
-            heroMage = new Hero("Hero.sf", new Vector2(200,200),100);
-            mapDebug = new Map("DebugMap");
+            heroMage = new Hero("HeroSprite.sf", new Vector2(200,200),100);
+            mapDebug = new Map("debogmap");
             base.Initialize();
         }
 
@@ -37,6 +37,9 @@ namespace GrammaCast
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             mapDebug.LoadContent(Content, GraphicsDevice);
+            _graphics.PreferredBackBufferWidth = mapDebug.TileMap.Height * mapDebug.TileMap.TileHeight;
+            _graphics.PreferredBackBufferHeight = mapDebug.TileMap.Width * mapDebug.TileMap.TileWidth;
+            _graphics.ApplyChanges();
             heroMage.LoadContent(Content);
 
             // TODO: use this.Content to load your game content here
@@ -57,8 +60,11 @@ namespace GrammaCast
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            mapDebug.Draw(_spriteBatch);
+            //GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            _spriteBatch.Begin();
+            mapDebug.Draw();
             heroMage.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

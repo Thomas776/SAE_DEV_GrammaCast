@@ -9,6 +9,7 @@ namespace GrammaCast
 {
     public class Hero
     {
+        private Game1 _myGame; // pour récupérer le jeu en cours
         private Vector2 positionHero;
         private int vitesseHero;
         private AnimatedSprite asHero;
@@ -28,9 +29,54 @@ namespace GrammaCast
             this.ASHero = new AnimatedSprite(spriteSheet);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
-            this.ASHero.Play("idleWest");
+            string animation;
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float walkSpeed = deltaSeconds * this.VitesseHero;
+
+            KeyboardState keyboardState = Keyboard.GetState();
+            //collision fenêtre
+            if (this.PositionHero.X >= windowWidth - this.ASHero.TextureRegion.Width/4)
+            {
+                this.PositionHero.X -= walkSpeed;
+            }
+            else if (this.PositionHero.Y >= windowHeight - this.ASHero.TextureRegion.Height / 2)
+            {
+                this.PositionHero.Y -= walkSpeed;
+            }
+            else if (this.PositionHero.X <= 0 + this.ASHero.TextureRegion.Width / 4)
+            {
+                this.PositionHero.X += walkSpeed;
+            }
+            else if (this.PositionHero.Y <= 0 + this.ASHero.TextureRegion.Height / 3)
+            {
+                this.PositionHero.Y += walkSpeed;
+            }
+            //déplacement
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                animation = "walkWest";
+                this.PositionHero.X -= walkSpeed;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                animation = "walkEast";
+                this.PositionHero.X += walkSpeed;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                animation = "walkNorth";
+                this.PositionHero.Y -= walkSpeed;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                animation = "walkSouth";
+                this.PositionHero.Y += walkSpeed;
+            }
+            else animation = "idleSouth";
+
+            this.ASHero.Play(animation);
             this.ASHero.Update(gameTime);
         }
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
@@ -50,16 +96,13 @@ namespace GrammaCast
             get => asHero;
             private set => asHero = value;
         }
-        public Vector2 PositionHero
-        {
-            get => positionHero;
-            private set => positionHero = value;
-        }
+        public Vector2 PositionHero;
+
         public int VitesseHero
         {
-            get => VitesseHero;
+            get => vitesseHero;
             private set => vitesseHero = value;
         }
-
     }
+    
 }

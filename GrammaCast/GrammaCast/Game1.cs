@@ -23,7 +23,7 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
-            heroMage = new Hero("Hero.sf", new Vector2(200,200),50);
+            heroMage = new Hero("Hero.sf", new Vector2(200,200),100);
             base.Initialize();
         }
 
@@ -41,7 +41,7 @@ namespace GrammaCast
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            heroMage.Update(gameTime);
+            heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             // TODO: Add your update logic here
 

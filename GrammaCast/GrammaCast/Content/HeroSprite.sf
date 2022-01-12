@@ -5,10 +5,25 @@
     "regionHeight": 63
   },
   "cycles": {
-    "idleSprite": {
+    "idleSouth": {
       "frames": [26],
       "isLooping": false,
       "frameDuration": 0.5
+    },
+    "idleWest": {
+      "frames": [13],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleEast": {
+      "frames": [39],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "idleNorth": {
+      "frames": [1],
+      "isLooping": false,
+      "frameDuration": 0.2
     },
     "walkSouth": {
       "frames": [ 27, 28, 29, 30, 31, 32, 33, 34 ],
@@ -21,12 +36,12 @@
       "frameDuration": 0.2
     },
     "walkNorth": {
-      "frames": [1,2,3,4,5,6,7,8],
+      "frames": [2,3,4,5,6,7,8,9],
       "isLooping": false,
       "frameDuration": 0.2
     },
     "walkWest": {
-      "frames": [13,14,15,16,17,18,19,20],
+      "frames": [ 14, 15, 16, 17, 18, 19, 20,21],
       "isLooping": false,
       "frameDuration": 0.2
     },
@@ -36,7 +51,7 @@
       "frameDuration": 0.2
     },
     "idleDeath": {
-      "frames": [57],
+      "frames": [53],
       "isLooping": false,
       "frameDuration": 0.2
     }

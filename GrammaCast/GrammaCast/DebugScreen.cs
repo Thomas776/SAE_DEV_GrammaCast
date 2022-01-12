@@ -11,7 +11,7 @@ namespace GrammaCast
     {
         private TiledMap tileMap;
         private TiledMapRenderer tileMapRenderer;
-        private TiledMapTileLayer tileMapLayer;
+        private TiledMapTileLayer[] tileMapLayer;
         private string path;
 
         public Map(string path) 
@@ -23,8 +23,11 @@ namespace GrammaCast
         {
             this.TileMap = Content.Load<TiledMap>(this.Path);
             this.TileMapRenderer = new TiledMapRenderer(gd, this.TileMap);
-            //this.TiledMapLayer = this.TiledMap.GetLayer<TiledMapTileLayer>("Calque de Tuiles 2");
-            
+            this.TileMapLayer = new [] { this.TileMap.GetLayer<TiledMapTileLayer>("Zone"),
+                this.TileMap.GetLayer<TiledMapTileLayer>("Sol"),
+                this.TileMap.GetLayer<TiledMapTileLayer>("Obstacles")};
+
+
         }
         public void Update(GameTime gameTime)
         {
@@ -50,7 +53,7 @@ namespace GrammaCast
             get => tileMapRenderer;
             private set => tileMapRenderer = value;
         }
-        public TiledMapTileLayer TildMapLayer
+        public TiledMapTileLayer[] TileMapLayer
         {
             get => tileMapLayer;
             private set => tileMapLayer = value;

@@ -14,6 +14,7 @@ namespace GrammaCast
         Hero heroMage;
         Map mapDebug;
         Boss bossGolem;
+        Ennemi[] ennemisForet;
 
         public Game1()
         {
@@ -26,10 +27,14 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
-
-            bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
-            heroMage = new Hero("HeroSprite.sf", new Vector2(200, 200), 100);
             mapDebug = new Map("debogmap");
+            bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
+            heroMage = new Hero("HeroSprite.sf", new Vector2(200, 200), 125) { map = mapDebug };
+
+            ennemisForet = new Ennemi[]
+            {
+                new Ennemi("slimeSprite.sf", new Vector2(112, 530),40) { map = mapDebug,}
+            };
 
             base.Initialize();
         }
@@ -43,6 +48,10 @@ namespace GrammaCast
             _graphics.ApplyChanges();
             bossGolem.LoadContent(Content);
             heroMage.LoadContent(Content);
+            foreach (Ennemi ef in ennemisForet)
+            {
+                ef.LoadContent(Content);
+            }
 
 
             // TODO: use this.Content to load your game content here
@@ -55,7 +64,10 @@ namespace GrammaCast
             mapDebug.Update(gameTime);
             bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
+            foreach (Ennemi ef in ennemisForet)
+            {
+                ef.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
 
             // TODO: Add your update logic here
 
@@ -70,6 +82,10 @@ namespace GrammaCast
             mapDebug.Draw();
             bossGolem.Draw(gameTime, _spriteBatch);
             heroMage.Draw(gameTime, _spriteBatch);
+            foreach (Ennemi ef in ennemisForet)
+            {
+                ef.Draw(gameTime, _spriteBatch);
+            }
             _spriteBatch.End();
             // TODO: Add your drawing code here
 

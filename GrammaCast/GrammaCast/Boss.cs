@@ -11,7 +11,6 @@ namespace GrammaCast
     {
         private AnimatedSprite asBoss;
         private string path;
-        private Vector2 positionBoss;
 
         public Boss(string path, Vector2 positionBoss)
         {
@@ -46,7 +45,7 @@ namespace GrammaCast
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             
-            _spriteBatch.Draw(this.ASBoss, this.PositionBoss);
+            //_spriteBatch.Draw(this.ASBoss, this.PositionBoss);
         }
 
         public string Path
@@ -60,6 +59,5 @@ namespace GrammaCast
             private set => asBoss = value;
         }
         public Vector2 PositionBoss;
-
     }
 }

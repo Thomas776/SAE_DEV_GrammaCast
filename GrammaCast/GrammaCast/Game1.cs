@@ -16,6 +16,7 @@ namespace GrammaCast
         MapForet mapForet;
         Boss bossGolem;
         Ennemi[] ennemisForet;
+        Attaque attaqueGramma;
 
         public Game1()
         {
@@ -33,14 +34,15 @@ namespace GrammaCast
             else positionHero = new Vector2(200, 200);
             bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { map = mapForet };
-
+            attaqueGramma = new Attaque() { perso = heroMage };
             ennemisForet = new Ennemi[]
             {
-                new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage},
-                new Ennemi(new Vector2(528, 480),40) { map = mapForet, perso = heroMage},
-                new Ennemi(new Vector2(512, 116),40) { map = mapForet, perso = heroMage},
-                new Ennemi(new Vector2(336, 48),40) { map = mapForet, perso = heroMage}
+                new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
+                new Ennemi(new Vector2(528, 480),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
+                new Ennemi(new Vector2(512, 116),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
+                new Ennemi(new Vector2(336, 48),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma}
             };
+
 
             base.Initialize();
         }
@@ -58,6 +60,7 @@ namespace GrammaCast
             {
                 ef.LoadContent(Content);
             }
+            attaqueGramma.LoadContent(Content);
 
 
             // TODO: use this.Content to load your game content here
@@ -74,6 +77,7 @@ namespace GrammaCast
             {
                 ef.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             }
+            if (attaqueGramma.Actif) attaqueGramma.Update(gameTime);
 
             // TODO: Add your update logic here
 
@@ -86,12 +90,14 @@ namespace GrammaCast
             //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             _spriteBatch.Begin();
             mapForet.Draw();
-            bossGolem.Draw(gameTime, _spriteBatch);
-            heroMage.Draw(gameTime, _spriteBatch);
+            bossGolem.Draw(gameTime, _spriteBatch);            
             foreach (Ennemi ef in ennemisForet)
             {
                 ef.Draw(gameTime, _spriteBatch);
             }
+            if (attaqueGramma.Actif) attaqueGramma.Draw(gameTime, _spriteBatch);
+            heroMage.Draw(gameTime, _spriteBatch);
+            
             _spriteBatch.End();
             // TODO: Add your drawing code here
 

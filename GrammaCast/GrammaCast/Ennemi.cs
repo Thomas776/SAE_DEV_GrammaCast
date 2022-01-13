@@ -14,6 +14,7 @@ namespace GrammaCast
         public string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", };
         public MapForet map;
         public Hero perso;
+        public Attaque attaqueLetter;
         private int vitesseEnnemi;
         private AnimatedSprite asEnnemi;
         private string path;
@@ -49,13 +50,15 @@ namespace GrammaCast
                         perso.Block = true;
                         this.Block = true;
                         animation = "idle";
+                        attaqueLetter.Actif = true;
+                        if (attaqueLetter.Final) this.Actif = false;
                     }
                     else animation = this.Deplacement(gameTime);
                 }
                 else animation = "idle";
                 this.ASEnnemi.Play(animation);
-                this.ASEnnemi.Update(gameTime);
             }
+            this.ASEnnemi.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)

@@ -41,6 +41,13 @@
 /processor:TiledMapProcessor
 /build:debogmap.tmx
 
+#begin font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:font.spritefont
+
 #begin foret.tmx
 /importer:TiledMapImporter
 /processor:TiledMapProcessor

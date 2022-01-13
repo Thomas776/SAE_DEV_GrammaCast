@@ -11,7 +11,8 @@ namespace GrammaCast
     {
         private TiledMap tileMap;
         private TiledMapRenderer tileMapRenderer;
-        private TiledMapTileLayer[] tileMapLayer;
+        private TiledMapTileLayer tileMapLayerZone;
+        private TiledMapTileLayer tileMapLayerObstacles;
         private string path;
 
         public MapForet(string path)
@@ -23,13 +24,8 @@ namespace GrammaCast
         {
             this.TileMap = Content.Load<TiledMap>(this.Path);
             this.TileMapRenderer = new TiledMapRenderer(gd, this.TileMap);
-            this.TileMapLayer = new[] { this.TileMap.GetLayer<TiledMapTileLayer>("zone"),
-                this.TileMap.GetLayer<TiledMapTileLayer>("sol"),
-                this.TileMap.GetLayer<TiledMapTileLayer>("chemin"),
-                this.TileMap.GetLayer<TiledMapTileLayer>("deco"),
-                this.TileMap.GetLayer<TiledMapTileLayer>("obstacles"),
-                this.TileMap.GetLayer<TiledMapTileLayer>("hauteur")};
-
+            this.TileMapLayerZone = this.TileMap.GetLayer<TiledMapTileLayer>("zone");
+            this.TileMapLayerObstacles = this.TileMap.GetLayer<TiledMapTileLayer>("obstacles");
 
         }
         public void Update(GameTime gameTime)
@@ -56,10 +52,15 @@ namespace GrammaCast
             get => tileMapRenderer;
             private set => tileMapRenderer = value;
         }
-        public TiledMapTileLayer[] TileMapLayer
+        public TiledMapTileLayer TileMapLayerZone
         {
-            get => tileMapLayer;
-            private set => tileMapLayer = value;
+            get => tileMapLayerZone;
+            private set => tileMapLayerZone = value;
+        }
+        public TiledMapTileLayer TileMapLayerObstacles
+        {
+            get => tileMapLayerObstacles;
+            private set => tileMapLayerObstacles = value;
         }
     }
 }

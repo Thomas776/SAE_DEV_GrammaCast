@@ -24,6 +24,7 @@ namespace GrammaCast
             Path = path;
             PositionEnnemi = positionEnnemi;
             VitesseEnnemi = vitesseEnnemi;
+            Actif = true;
         }
 
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
@@ -35,22 +36,27 @@ namespace GrammaCast
 
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
-            if (this.EstProche())
+            if (this.Actif)
             {
-                Console.WriteLine($"{this.PositionEnnemi.X}, {this.PositionEnnemi.Y}, {perso.PositionHero.X}, {perso.PositionHero.Y}");
-                perso.PositionHero.Y = +50;
-            }
-            else
-            {
-                string animation = this.Deplacement(gameTime);
-                this.ASEnnemi.Play(animation);
-            }
+                if (this.EstProche())
+                {
+                    perso.Block = true;
 
-            this.ASEnnemi.Update(gameTime);
+                }
+
+                else
+                {
+                    string animation = this.Deplacement(gameTime);
+                    this.ASEnnemi.Play(animation);
+                }
+
+                this.ASEnnemi.Update(gameTime);
+            }
         }
+
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
-        {
-            _spriteBatch.Draw(this.ASEnnemi, this.PositionEnnemi);
+        { 
+            if (this.Actif) _spriteBatch.Draw(this.ASEnnemi, this.PositionEnnemi);
         }
 
         public string Path
@@ -70,6 +76,7 @@ namespace GrammaCast
             get => vitesseEnnemi;
             private set => vitesseEnnemi = value;
         }
+        public bool Actif;
         private string Deplacement(GameTime gameTime)
         {
             string animation;
@@ -84,7 +91,6 @@ namespace GrammaCast
             {
                 indice = rand.Next(1, 5);
                 timerDeplacement = new Timer(timeMax);
-                Console.WriteLine($"test {indice}");
             }
             switch (indice)
             {
@@ -142,15 +148,9 @@ namespace GrammaCast
 
         public bool IsCollisionEnnemi(ushort x, ushort y)
         {
-            int i = 0;
-            int indice = 0;
-            foreach (TiledMapLayer tml in map.TileMapLayer)
-            {
-                if (tml.ToString() == "zone") indice = i;
-                i++;
-            }
+
             TiledMapTile? tile;
-            if (map.TileMapLayer[indice].TryGetTile(x, y, out tile) == false)
+            if (map.TileMapLayerZone.TryGetTile(x, y, out tile) == false)
                 return true;
             if (tile.Value.IsBlank)
                 return true;
@@ -158,13 +158,14 @@ namespace GrammaCast
         }
         private bool EstProche()
         {
-
-            if (this.PositionEnnemi.X - perso.PositionHero.X <= Math.Abs(80) && this.PositionEnnemi.Y - perso.PositionHero.Y <= Math.Abs(80))
-                if (!perso.IsCollisionHero(perso.PositionHero))
-                    return true;
+            float posX = Math.Abs(this.PositionEnnemi.X - perso.PositionHero.X);
+            float posY = Math.Abs(this.PositionEnnemi.Y - perso.PositionHero.Y);
+            if (posX <= 50 && posY <= 50)
+            {
+                if (perso.IsCollisionZone()) return true;
                 else return false;
+            }                
             else return false;
-
         }
     }
 }

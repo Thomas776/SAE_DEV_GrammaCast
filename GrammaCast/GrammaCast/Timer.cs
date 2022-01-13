@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GrammaCast
 {
-    class Timer
+    public class Timer
     {
         private float tick;
         private float maxTick;

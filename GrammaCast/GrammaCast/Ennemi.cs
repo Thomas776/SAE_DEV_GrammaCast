@@ -9,7 +9,7 @@ using System;
 
 namespace GrammaCast
 {
-    class Ennemi
+    public class Ennemi
     {
         public string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", };
         public MapForet map;
@@ -20,6 +20,7 @@ namespace GrammaCast
         private string path;
         public Timer timerDeplacement;
         int indice = 0;
+        
         Random rand = new Random();
 
         public Ennemi(Vector2 positionEnnemi, int vitesseEnnemi)
@@ -51,11 +52,23 @@ namespace GrammaCast
                         this.Block = true;
                         animation = "idle";
                         attaqueLetter.Actif = true;
-                        if (attaqueLetter.Final) this.Actif = false;
+
                     }
-                    else animation = this.Deplacement(gameTime);
+                    else
+                    {
+                        animation = this.Deplacement(gameTime);
+                    }
                 }
-                else animation = "idle";
+                else
+                {
+                    animation = "idle";
+                    if (attaqueLetter.Final)
+                    {
+                        this.Actif = false;
+                        perso.Block = false;
+
+                    }
+                }
                 this.ASEnnemi.Play(animation);
             }
             this.ASEnnemi.Update(gameTime);

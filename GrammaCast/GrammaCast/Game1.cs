@@ -16,7 +16,8 @@ namespace GrammaCast
         MapForet mapForet;
         Boss bossGolem;
         Ennemi[] ennemisForet;
-        Attaque attaqueGramma;
+        public Attaque attaqueGramma;
+
 
         public Game1()
         {
@@ -34,7 +35,7 @@ namespace GrammaCast
             else positionHero = new Vector2(200, 200);
             bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { map = mapForet };
-            attaqueGramma = new Attaque() { perso = heroMage };
+            attaqueGramma = new Attaque() { perso = heroMage};
             ennemisForet = new Ennemi[]
             {
                 new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},

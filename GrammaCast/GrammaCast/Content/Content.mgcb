@@ -41,6 +41,11 @@
 /processor:TiledMapProcessor
 /build:debogmap.tmx
 
+#begin foretultime.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:foretultime.tmx
+
 #begin Hero.png
 /importer:TextureImporter
 /processor:TextureProcessor

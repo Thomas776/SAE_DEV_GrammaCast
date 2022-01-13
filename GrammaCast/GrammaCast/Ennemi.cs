@@ -11,6 +11,7 @@ namespace GrammaCast
 {
     class Ennemi
     {
+        public string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", };
         public MapForet map;
         public Hero perso;
         private int vitesseEnnemi;
@@ -18,10 +19,11 @@ namespace GrammaCast
         private string path;
         public Timer timerDeplacement;
         int indice = 0;
+        Random rand = new Random();
 
-        public Ennemi(string path, Vector2 positionEnnemi, int vitesseEnnemi)
+        public Ennemi(Vector2 positionEnnemi, int vitesseEnnemi)
         {
-            Path = path;
+            Path = ennemiSpritePath[rand.Next(ennemiSpritePath.Length)];
             PositionEnnemi = positionEnnemi;
             VitesseEnnemi = vitesseEnnemi;
             Block = false;

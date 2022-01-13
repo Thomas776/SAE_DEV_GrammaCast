@@ -12,7 +12,7 @@ namespace GrammaCast
 {
     class Attaque
     {
-        public string[] spriteChemin = new string[] { "IceCastSprite.sf" };
+        public string[] spriteChemin = new string[] { "IceCastSprite.sf", "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "MagicBarrierSprite.sf", "PoisonCastSprite.sf" ,};
         private char[] alphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
         private string fontPath;
         private string spritePath;

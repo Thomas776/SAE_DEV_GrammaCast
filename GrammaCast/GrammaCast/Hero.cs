@@ -11,6 +11,7 @@ namespace GrammaCast
     public class Hero
     {
         public Map map;
+
         private int vitesseHero;
         private AnimatedSprite asHero;
         private string path;
@@ -60,7 +61,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth - 1);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
                 animation = "walkWest";
-                if (!IsCollision(tx, ty))
+                if (!IsCollisionHero(tx, ty, 2))
                     this.PositionHero.X -= walkSpeed;
                 indiceAnimation = 1;
             }
@@ -69,7 +70,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth + 1);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
                 animation = "walkEast";
-                if (!IsCollision(tx, ty))
+                if (!IsCollisionHero(tx, ty, 2))
                     this.PositionHero.X += walkSpeed;
                 indiceAnimation = 2;
             }
@@ -78,7 +79,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X  / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionHero.Y  / map.TileMap.TileHeight);
                 animation = "walkNorth";
-                if (!IsCollision(tx, ty))
+                if (!IsCollisionHero(tx, ty, 2))
                     this.PositionHero.Y -= walkSpeed;
 
                 indiceAnimation = 3;
@@ -88,7 +89,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight + 1);
                 animation = "walkSouth";
-                if (!IsCollision(tx, ty))
+                if (!IsCollisionHero(tx, ty,2))
                     this.PositionHero.Y += walkSpeed;
                 indiceAnimation = 0;
             }
@@ -133,11 +134,21 @@ namespace GrammaCast
             get => vitesseHero;
             private set => vitesseHero = value;
         }
-        private bool IsCollision(ushort x, ushort y)
+        public bool IsCollisionHero(ushort x, ushort y, int indice)
         {
             // définition de tile qui peut être null (?)
             TiledMapTile? tile;
-            if (map.TileMapLayer[2].TryGetTile(x, y, out tile) == false)
+            if (map.TileMapLayer[indice].TryGetTile(x, y, out tile) == false)
+                return false;
+            if (!tile.Value.IsBlank)
+                return true;
+            return false;
+        }
+        public bool IsCollisionHero(Vector2 position, int indice)
+        {
+            // définition de tile qui peut être null (?)
+            TiledMapTile? tile;
+            if (map.TileMapLayer[indice].TryGetTile((ushort)position.X, (ushort)position.Y, out tile) == false)
                 return false;
             if (!tile.Value.IsBlank)
                 return true;

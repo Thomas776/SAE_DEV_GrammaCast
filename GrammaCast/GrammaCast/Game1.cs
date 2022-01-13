@@ -36,7 +36,10 @@ namespace GrammaCast
 
             ennemisForet = new Ennemi[]
             {
-                new Ennemi("slimeSprite.sf", new Vector2(112, 530),40) { map = mapForet, perso = heroMage}
+                new Ennemi("slimeSprite.sf", new Vector2(112, 530),40) { map = mapForet, perso = heroMage},
+                new Ennemi("slimeSprite.sf", new Vector2(528, 480),40) { map = mapForet, perso = heroMage},
+                new Ennemi("slimeSprite.sf", new Vector2(512, 116),40) { map = mapForet, perso = heroMage},
+                new Ennemi("slimeSprite.sf", new Vector2(336, 48),40) { map = mapForet, perso = heroMage}
             };
 
             base.Initialize();

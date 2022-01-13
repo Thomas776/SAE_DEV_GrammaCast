@@ -24,6 +24,7 @@ namespace GrammaCast
             Path = path;
             PositionEnnemi = positionEnnemi;
             VitesseEnnemi = vitesseEnnemi;
+            Block = false;
             Actif = true;
         }
 
@@ -36,20 +37,21 @@ namespace GrammaCast
 
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
+            string animation;
             if (this.Actif)
             {
-                if (this.EstProche())
+                if (!this.Block)
                 {
-                    perso.Block = true;
-
+                    if (this.EstProche())
+                    {
+                        perso.Block = true;
+                        this.Block = true;
+                        animation = "idle";
+                    }
+                    else animation = this.Deplacement(gameTime);
                 }
-
-                else
-                {
-                    string animation = this.Deplacement(gameTime);
-                    this.ASEnnemi.Play(animation);
-                }
-
+                else animation = "idle";
+                this.ASEnnemi.Play(animation);
                 this.ASEnnemi.Update(gameTime);
             }
         }
@@ -77,6 +79,7 @@ namespace GrammaCast
             private set => vitesseEnnemi = value;
         }
         public bool Actif;
+        public bool Block;
         private string Deplacement(GameTime gameTime)
         {
             string animation;

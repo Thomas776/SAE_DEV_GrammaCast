@@ -43,8 +43,7 @@ namespace GrammaCast
             this.ASBoss.Update(gameTime);
         }
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
-        {
-            
+        {            
             //_spriteBatch.Draw(this.ASBoss, this.PositionBoss);
         }
 

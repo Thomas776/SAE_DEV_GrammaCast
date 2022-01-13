@@ -11,8 +11,9 @@ namespace GrammaCast
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
         public SpriteBatch SpriteBatch { get; set; }
+        public Vector2 positionHero;
         Hero heroMage;
-        Map mapDebug;
+        MapForet mapForet;
         Boss bossGolem;
         Ennemi[] ennemisForet;
 
@@ -27,13 +28,15 @@ namespace GrammaCast
         {
             // TODO: Add your initialization logic here
 
-            mapDebug = new Map("debogmap");
+            mapForet = new MapForet("foret");
+            if (mapForet.Path == "foret") positionHero = new Vector2(112, 720);
+            else positionHero = new Vector2(200, 200);
             bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
-            heroMage = new Hero("HeroSprite.sf", new Vector2(200, 200), 125) { map = mapDebug };
+            heroMage = new Hero("HeroSprite.sf", positionHero, 125) { map = mapForet };
 
             ennemisForet = new Ennemi[]
             {
-                new Ennemi("slimeSprite.sf", new Vector2(112, 530),40) { map = mapDebug, perso = heroMage}
+                new Ennemi("slimeSprite.sf", new Vector2(112, 530),40) { map = mapForet, perso = heroMage}
             };
 
             base.Initialize();
@@ -42,9 +45,9 @@ namespace GrammaCast
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            mapDebug.LoadContent(Content, GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = mapDebug.TileMap.Height * mapDebug.TileMap.TileHeight;
-            _graphics.PreferredBackBufferHeight = mapDebug.TileMap.Width * mapDebug.TileMap.TileWidth;
+            mapForet.LoadContent(Content, GraphicsDevice);
+            _graphics.PreferredBackBufferWidth = mapForet.TileMap.Height * mapForet.TileMap.TileHeight;
+            _graphics.PreferredBackBufferHeight = mapForet.TileMap.Width * mapForet.TileMap.TileWidth;
             _graphics.ApplyChanges();
             bossGolem.LoadContent(Content);
             heroMage.LoadContent(Content);
@@ -61,7 +64,7 @@ namespace GrammaCast
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            mapDebug.Update(gameTime);
+            mapForet.Update(gameTime);
             bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             foreach (Ennemi ef in ennemisForet)
@@ -79,7 +82,7 @@ namespace GrammaCast
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             _spriteBatch.Begin();
-            mapDebug.Draw();
+            mapForet.Draw();
             bossGolem.Draw(gameTime, _spriteBatch);
             heroMage.Draw(gameTime, _spriteBatch);
             foreach (Ennemi ef in ennemisForet)

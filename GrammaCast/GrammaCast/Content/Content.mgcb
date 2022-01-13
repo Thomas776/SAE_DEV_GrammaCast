@@ -41,10 +41,10 @@
 /processor:TiledMapProcessor
 /build:debogmap.tmx
 
-#begin foretultime.tmx
+#begin foret.tmx
 /importer:TiledMapImporter
 /processor:TiledMapProcessor
-/build:foretultime.tmx
+/build:foret.tmx
 
 #begin Hero.png
 /importer:TextureImporter

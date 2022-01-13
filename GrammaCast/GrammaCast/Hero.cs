@@ -10,7 +10,7 @@ namespace GrammaCast
 {
     public class Hero
     {
-        public Map map;
+        public MapForet map;
 
         private int vitesseHero;
         private AnimatedSprite asHero;
@@ -61,7 +61,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth - 1);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
                 animation = "walkWest";
-                if (!IsCollisionHero(tx, ty, 2))
+                if (!IsCollisionHero(tx, ty))
                     this.PositionHero.X -= walkSpeed;
                 indiceAnimation = 1;
             }
@@ -70,7 +70,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth + 1);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
                 animation = "walkEast";
-                if (!IsCollisionHero(tx, ty, 2))
+                if (!IsCollisionHero(tx, ty))
                     this.PositionHero.X += walkSpeed;
                 indiceAnimation = 2;
             }
@@ -79,7 +79,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X  / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionHero.Y  / map.TileMap.TileHeight);
                 animation = "walkNorth";
-                if (!IsCollisionHero(tx, ty, 2))
+                if (!IsCollisionHero(tx, ty))
                     this.PositionHero.Y -= walkSpeed;
 
                 indiceAnimation = 3;
@@ -89,7 +89,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight + 1);
                 animation = "walkSouth";
-                if (!IsCollisionHero(tx, ty,2))
+                if (!IsCollisionHero(tx, ty))
                     this.PositionHero.Y += walkSpeed;
                 indiceAnimation = 0;
             }
@@ -134,23 +134,35 @@ namespace GrammaCast
             get => vitesseHero;
             private set => vitesseHero = value;
         }
-        public bool IsCollisionHero(ushort x, ushort y, int indice)
+        public bool IsCollisionHero(ushort x, ushort y)
         {
-            // définition de tile qui peut être null (?)
+            int i = 0;
+            int indice = 0;
+            foreach (TiledMapLayer tml in map.TileMapLayer)
+            {
+                if (tml.ToString() == "obstacles") indice = i;
+                i++;
+            }
             TiledMapTile? tile;
             if (map.TileMapLayer[indice].TryGetTile(x, y, out tile) == false)
-                return false;
+                return true;
             if (!tile.Value.IsBlank)
                 return true;
             return false;
         }
-        public bool IsCollisionHero(Vector2 position, int indice)
+        public bool IsCollisionHero(Vector2 position)
         {
-            // définition de tile qui peut être null (?)
+            int i = 0;
+            int indice = 0;
+            foreach (TiledMapLayer tml in map.TileMapLayer)
+            {
+                if (tml.ToString() == "zone") indice = i;
+                i++;
+            }
             TiledMapTile? tile;
             if (map.TileMapLayer[indice].TryGetTile((ushort)position.X, (ushort)position.Y, out tile) == false)
-                return false;
-            if (!tile.Value.IsBlank)
+                return true;
+            if (tile.Value.IsBlank)
                 return true;
             return false;
         }

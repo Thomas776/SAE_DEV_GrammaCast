@@ -11,7 +11,7 @@ namespace GrammaCast
 {
     class Ennemi
     {
-        public Map map;
+        public MapForet map;
         public Hero perso;
         private int vitesseEnnemi;
         private AnimatedSprite asEnnemi;
@@ -38,7 +38,7 @@ namespace GrammaCast
             if (this.EstProche())
             {
                 Console.WriteLine($"{this.PositionEnnemi.X}, {this.PositionEnnemi.Y}, {perso.PositionHero.X}, {perso.PositionHero.Y}");
-                perso.PositionHero = new Vector2(0, 0);
+                perso.PositionHero.Y = +50;
             }
             else
             {
@@ -110,7 +110,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight - 1);
                 animation = "walkNorth";
-                if (!IsCollisionEnnemi(tx, ty, 0)) this.PositionEnnemi.Y -= walkSpeed;
+                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y -= walkSpeed;
 
             }
             else if (deplacement.X == -2 && deplacement.Y == 0)
@@ -118,7 +118,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth - 1);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight);
                 animation = "walkWest";
-                if (!IsCollisionEnnemi(tx, ty, 0)) this.PositionEnnemi.X -= walkSpeed;
+                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X -= walkSpeed;
 
             }
             else if (deplacement.X == 0 && deplacement.Y == 2)
@@ -126,7 +126,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight + 1);
                 animation = "walkSouth";
-                if (!IsCollisionEnnemi(tx, ty, 0)) this.PositionEnnemi.Y += walkSpeed;
+                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y += walkSpeed;
 
             }
             else if (deplacement.X == 2 && deplacement.Y == 0)
@@ -134,15 +134,21 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth + 1);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight);
                 animation = "walkEast";
-                if (!IsCollisionEnnemi(tx, ty,0)) this.PositionEnnemi.X += walkSpeed;
+                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X += walkSpeed;
             }
             else animation = "idle";
             return animation;
         }
 
-        public bool IsCollisionEnnemi(ushort x, ushort y,int indice)
+        public bool IsCollisionEnnemi(ushort x, ushort y)
         {
-            // définition de tile qui peut être null (?)
+            int i = 0;
+            int indice = 0;
+            foreach (TiledMapLayer tml in map.TileMapLayer)
+            {
+                if (tml.ToString() == "zone") indice = i;
+                i++;
+            }
             TiledMapTile? tile;
             if (map.TileMapLayer[indice].TryGetTile(x, y, out tile) == false)
                 return true;
@@ -154,7 +160,7 @@ namespace GrammaCast
         {
 
             if (this.PositionEnnemi.X - perso.PositionHero.X <= Math.Abs(80) && this.PositionEnnemi.Y - perso.PositionHero.Y <= Math.Abs(80))
-                if (!perso.IsCollisionHero(perso.PositionHero, 2))
+                if (!perso.IsCollisionHero(perso.PositionHero))
                     return true;
                 else return false;
             else return false;

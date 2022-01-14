@@ -11,21 +11,21 @@ namespace GrammaCast
 {
     public class Ennemi
     {
-        public string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", "slimeblueSprite.sf", "slimeredSprite.sf"};
+        public static string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", "slimeblueSprite.sf", "slimeredSprite.sf"};
+        public SpriteSheet[] ennemiSprite = new SpriteSheet[ennemiSpritePath.Length];
         public MapForet map;
         public Hero perso;
         public Attaque attaqueLetter;
         private int vitesseEnnemi;
         private AnimatedSprite asEnnemi;
-        private string path;
         public Timer timerDeplacement;
+        public Timer timerApparition;
         int indice = 0;
         
         Random rand = new Random();
 
         public Ennemi(Vector2 positionEnnemi, int vitesseEnnemi)
         {
-            Path = ennemiSpritePath[rand.Next(ennemiSpritePath.Length)];
             PositionEnnemi = positionEnnemi;
             VitesseEnnemi = vitesseEnnemi;
             Block = false;
@@ -34,13 +34,15 @@ namespace GrammaCast
 
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
-
-            SpriteSheet spriteSheet = Content.Load<SpriteSheet>(this.Path, new JsonContentLoader());
-            this.ASEnnemi = new AnimatedSprite(spriteSheet);
+            for(int i = 0; i < ennemiSprite.Length; i ++)
+            {
+                ennemiSprite[i] = Content.Load<SpriteSheet>(ennemiSpritePath[i], new JsonContentLoader());
+            }            
+            this.ASEnnemi = new AnimatedSprite(ennemiSprite[rand.Next(ennemiSprite.Length)]);
         }
-
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             string animation;
             if (this.Actif)
             {
@@ -52,7 +54,6 @@ namespace GrammaCast
                         this.Block = true;
                         animation = "idle";
                         attaqueLetter.Actif = true;
-
                     }
                     else
                     {
@@ -71,6 +72,20 @@ namespace GrammaCast
                 }
                 this.ASEnnemi.Play(animation);
             }
+            else
+            {
+                if (timerApparition == null)
+                {
+                    timerApparition = new Timer(rand.Next(5,25));
+                }
+                if (timerApparition.AddTick(deltaSeconds) == false)
+                {
+                    this.Actif = true;
+                    this.Block = false;
+                    timerApparition = null;
+                }
+
+            }
             this.ASEnnemi.Update(gameTime);
         }
 
@@ -80,11 +95,6 @@ namespace GrammaCast
                 _spriteBatch.Draw(this.ASEnnemi, this.PositionEnnemi);
         }
 
-        public string Path
-        {
-            get => path;
-            private set => path = value;
-        }
         public AnimatedSprite ASEnnemi
         {
             get => asEnnemi;

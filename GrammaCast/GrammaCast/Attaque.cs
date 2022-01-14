@@ -12,24 +12,28 @@ namespace GrammaCast
 {
     public class Attaque
     {
-        public string[] spriteChemin = new string[] { "IceCastSprite.sf", "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "MagicBarrierSprite.sf", "PoisonCastSprite.sf" ,};
-        private string[] alphabet = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        public static string[] spriteChemin = new string[] { "IceCastSprite.sf",
+            "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "PoisonCastSprite.sf"};
+        private string[] alphabet = new string[] { "A", "B", "C", "D", "E", "F", "G",
+            "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        private SpriteSheet[] attaqueSprite = new SpriteSheet[spriteChemin.Length];
         public Hero perso;
         public Ennemi ennemi;
         private string fontPath;
-        private string spritePath;
+
         private SpriteFont attaqueFont;
         private AnimatedSprite asAttack;
         private string attaqueLettre;
         public Timer timerAnimation;
+        public Timer timerAttaque;
         Random rand = new Random();
+        public float point = 400;
+        public float sommePoint = 0;
 
-        private string _stringValue = string.Empty;
 
         public Attaque()
         {
             FontPath = "font";
-            SpritePath = spriteChemin[rand.Next(spriteChemin.Length)];
             Actif = false;
             Final = false;
             Animation = false;
@@ -39,50 +43,62 @@ namespace GrammaCast
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             this.AttaqueFont = Content.Load<SpriteFont>(this.FontPath);
-            SpriteSheet spriteSheet = Content.Load<SpriteSheet>(this.SpritePath, new JsonContentLoader());
-            this.AsAttack = new AnimatedSprite(spriteSheet);
+            for (int i = 0; i < attaqueSprite.Length; i++)
+            {
+                attaqueSprite[i] = Content.Load<SpriteSheet>(spriteChemin[i], new JsonContentLoader());
+            }
+            this.AsAttack = new AnimatedSprite(attaqueSprite[rand.Next(attaqueSprite.Length)]);
         }
-        public void Update(GameTime gameTime/*, float windowWidth, float windowHeight*/)
+        public void Update(GameTime gameTime)
         {
 
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (this.Actif)
+            {
+                if (timerAttaque == null)
+                {
+                    timerAttaque = new Timer(1000);
+                }
+                else
+                    timerAttaque.AddTick(deltaSeconds);
+            }
             if (this.Final)
-            {                
-               
+            {
                 this.AsAttack.Play("attack");
+
                 if (timerAnimation.AddTick(deltaSeconds) == false)
                 {
+                    
+                    sommePoint += point / timerAttaque.Tick;
+                    Console.WriteLine($"{sommePoint}, {timerAttaque.Tick}");
+                    timerAttaque = null;
                     this.Final = false;
                     this.Animation = false;
                     this.Actif = false;
-                    this.SpritePath = spriteChemin[rand.Next(spriteChemin.Length)];
                     this.AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
-                }
+                    this.AsAttack = new AnimatedSprite(attaqueSprite[rand.Next(attaqueSprite.Length)]);
+                    }
             }
             else
-            {
+            {                
                 this.GetLetter();
             }
-
             this.AsAttack.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
-            _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", new Vector2(perso.PositionHero.X,perso.PositionHero.Y -100), Color.White);
-            if (this.Animation) 
+            if (this.Animation)
                 _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y - 100));
+            _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", new Vector2(perso.PositionHero.X,perso.PositionHero.Y -100), Color.White);
+            
         }
         public string FontPath
         {
             get => fontPath;
             private set => fontPath = value;
         }
-        public string SpritePath
-        {
-            get => spritePath;
-            private set => spritePath = value;
-        }
+
         public SpriteFont AttaqueFont
         {
             get => attaqueFont;

@@ -25,12 +25,12 @@ namespace GrammaCast
         public float Tick
         {
             get => tick;
-            private set => tick = value;
+            set => tick = value;
         }
         public float MaxTick
         {
             get => maxTick;
-            private set => maxTick = value;
+            set => maxTick = value;
         }
     }
 }

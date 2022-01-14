@@ -1,8 +1,8 @@
 {
   "textureAtlas": {
     "texture": "FireCast.png",
-    "regionWidth": 96,
-    "regionHeight": 96
+    "regionWidth": 192,
+    "regionHeight": 192
   },
   "cycles": {
     "attack": {

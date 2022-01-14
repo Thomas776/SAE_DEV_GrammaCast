@@ -105,8 +105,8 @@ namespace GrammaCast
                         {
                             mapVillage[indice].Actif = false;
                             mapForet.Actif = true;
-                            positionHero = new Vector2(heroMage.PositionHero.X - 20, heroMage.PositionHero.Y);
-                            heroMage.PositionHero = new Vector2(112, 720);
+                            positionHero = new Vector2(20, heroMage.PositionHero.Y);
+                            heroMage.PositionHero = positionHero;
                         }
 
                     }
@@ -121,6 +121,7 @@ namespace GrammaCast
                 {
                     mapVillage[indice].Actif = true;
                     mapForet.Actif = false;
+                    positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
                     heroMage.PositionHero = positionHero;
                 }
             }
@@ -133,8 +134,6 @@ namespace GrammaCast
                     ef.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                 }
             }
-
-
             if (attaqueGramma.Actif) attaqueGramma.Update(gameTime);
 
             // TODO: Add your update logic here

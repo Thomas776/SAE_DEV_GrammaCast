@@ -70,7 +70,8 @@ namespace GrammaCast
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", new Vector2(perso.PositionHero.X,perso.PositionHero.Y -100), Color.White);
-            if (this.Animation)  _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y - 100));
+            if (this.Animation) 
+                _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y - 100));
         }
         public string FontPath
         {

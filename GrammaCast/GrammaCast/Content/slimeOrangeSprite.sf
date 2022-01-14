@@ -1,8 +1,8 @@
 {
   "textureAtlas": {
-    "texture": "slimeOrange.png",
-    "regionWidth": 32,
-    "regionHeight": 32
+    "texture": "slimeorange.png",
+    "regionWidth": 64,
+    "regionHeight": 64
   },
   "cycles": {
     "idle": {

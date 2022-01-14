@@ -14,10 +14,11 @@ namespace GrammaCast
         public Vector2 positionHero;
         Hero heroMage;
         MapForet mapForet;
-        MapVillage mapVillage;
+        MapVillage[] mapVillage;
         Boss bossGolem;
         Ennemi[] ennemisForet;
         public Attaque attaqueGramma;
+        int indice = 0;
 
 
         public Game1()
@@ -32,8 +33,10 @@ namespace GrammaCast
             // TODO: Add your initialization logic here
 
             mapForet = new MapForet("foret");
-            mapVillage = new MapVillage("LeHameau");
-            mapVillage.Actif = true;
+            mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
+            mapVillage[0].Actif = true;
+
+
             Vector2 positionHero = new Vector2(64, 192);
             bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet };
@@ -51,10 +54,13 @@ namespace GrammaCast
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            mapVillage.LoadContent(Content, GraphicsDevice);
+            foreach(MapVillage v in mapVillage)
+            {
+                v.LoadContent(Content, GraphicsDevice);
+            }
             mapForet.LoadContent(Content, GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = mapVillage.TileMap.Height * mapVillage.TileMap.TileHeight;
-            _graphics.PreferredBackBufferHeight = mapVillage.TileMap.Width * mapVillage.TileMap.TileWidth;
+            _graphics.PreferredBackBufferWidth = mapForet.TileMap.Height * mapForet.TileMap.TileHeight;
+            _graphics.PreferredBackBufferHeight = mapForet.TileMap.Width * mapForet.TileMap.TileWidth;
             _graphics.ApplyChanges();
             bossGolem.LoadContent(Content);
             heroMage.LoadContent(Content);
@@ -72,15 +78,40 @@ namespace GrammaCast
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (mapVillage.Actif)
+            if (mapVillage[indice].Actif)
             {
-                mapVillage.Update(gameTime);
-                if (heroMage.TestTransitionV(mapVillage))
+                mapVillage[indice].Update(gameTime);
+                if (heroMage.TestTransitionV(mapVillage[indice]))
                 {
-                    mapVillage.Actif = false;
-                    mapForet.Actif = true;
-                    positionHero = new Vector2(heroMage.PositionHero.X-16, heroMage.PositionHero.Y);
-                    heroMage.PositionHero = new Vector2(112, 720);
+                    if(indice == 0)
+                    {
+                        mapVillage[indice].Actif = false;
+                        indice = 1;
+                        mapVillage[indice].Actif = true;
+                        positionHero = new Vector2(20, heroMage.PositionHero.Y);
+                        heroMage.PositionHero = positionHero;
+                    }
+                    else
+                    {
+                        if (heroMage.PositionHero.X < GraphicsDevice.Viewport.Width / 2)
+                        {
+                            mapVillage[indice].Actif = false;
+                            indice = 0;
+                            mapVillage[indice].Actif = true;
+                            positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
+                            heroMage.PositionHero = positionHero;
+                        }
+                        else
+                        {
+                            mapVillage[indice].Actif = false;
+                            mapForet.Actif = true;
+                            positionHero = new Vector2(heroMage.PositionHero.X - 20, heroMage.PositionHero.Y);
+                            heroMage.PositionHero = new Vector2(112, 720);
+                        }
+
+                    }
+
+                    
                 }
             }
             else if (mapForet.Actif)
@@ -88,7 +119,7 @@ namespace GrammaCast
                 mapForet.Update(gameTime);
                 if (heroMage.TestTransitionF(mapForet))
                 {
-                    mapVillage.Actif = true;
+                    mapVillage[indice].Actif = true;
                     mapForet.Actif = false;
                     heroMage.PositionHero = positionHero;
                 }
@@ -116,8 +147,10 @@ namespace GrammaCast
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             _spriteBatch.Begin();
-            if (mapVillage.Actif) mapVillage.Draw();
-            else if (mapForet.Actif) mapForet.Draw();
+            if (mapVillage[indice].Actif)
+                mapVillage[indice].Draw();
+            else if 
+                (mapForet.Actif) mapForet.Draw();
             bossGolem.Draw(gameTime, _spriteBatch);
             if (mapForet.Actif)
             {
@@ -127,7 +160,8 @@ namespace GrammaCast
                 }
             }
                 
-            if (attaqueGramma.Actif) attaqueGramma.Draw(gameTime, _spriteBatch);
+            if (attaqueGramma.Actif) 
+                attaqueGramma.Draw(gameTime, _spriteBatch);
             heroMage.Draw(gameTime, _spriteBatch);
             
             _spriteBatch.End();

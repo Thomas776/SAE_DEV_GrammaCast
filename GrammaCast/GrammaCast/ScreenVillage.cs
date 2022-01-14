@@ -42,7 +42,7 @@ namespace GrammaCast
         public string Path
         {
             get => path;
-            private set => path = value;
+            set => path = value;
         }
         public TiledMap TileMap
         {

@@ -166,6 +166,11 @@
 /processor:TiledMapProcessor
 /build:LeHameau.tmx
 
+#begin LeHameau_2.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:LeHameau_2.tmx
+
 #begin LeKarma.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -249,6 +254,24 @@
 /processorParam:TextureFormat=Color
 /build:slime_spritesheet.png
 
+#begin slimeblue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slimeblue.png
+
+#begin slimeblueSprite.sf
+/importer:SpriteFactoryContentImporter
+/processor:SpriteFactoryContentProcessor
+/processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
+/build:slimeblueSprite.sf
+
 #begin slimeOrange.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -266,6 +289,24 @@
 /processor:SpriteFactoryContentProcessor
 /processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
 /build:slimeOrangeSprite.sf
+
+#begin slimered.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slimered.png
+
+#begin slimeredSprite.sf
+/importer:SpriteFactoryContentImporter
+/processor:SpriteFactoryContentProcessor
+/processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
+/build:slimeredSprite.sf
 
 #begin slimeSprite.sf
 /importer:SpriteFactoryContentImporter

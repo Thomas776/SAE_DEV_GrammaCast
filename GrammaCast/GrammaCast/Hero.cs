@@ -11,7 +11,7 @@ namespace GrammaCast
 {
     public class Hero
     {
-        public MapVillage mapV;
+        public MapVillage[] mapV;
         public MapForet mapF;
 
         private int vitesseHero;
@@ -38,7 +38,8 @@ namespace GrammaCast
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
             string animation = animationBase;
-            if (this.Block == false) animation = this.DeplacementHero(gameTime, windowWidth, windowHeight, ref indiceAnimation);
+            if (this.Block == false) 
+                animation = this.DeplacementHero(gameTime, windowWidth, windowHeight, ref indiceAnimation);
             else
             {                
                 switch (indiceAnimation)
@@ -108,9 +109,13 @@ namespace GrammaCast
                 this.PositionHero.Y += walkSpeed;
             }
             //déplacement
-            if (mapV.Actif)
+            if (mapV[0].Actif)
             {
-                animation = DeplacementV(mapV, walkSpeed);
+                animation = DeplacementV(mapV[0], walkSpeed);
+            }
+            else if (mapV[1].Actif)
+            {
+                animation = DeplacementV(mapV[1], walkSpeed);
             }
             else if (mapF.Actif)
             {

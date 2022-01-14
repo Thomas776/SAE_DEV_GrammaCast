@@ -137,7 +137,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight - 1);
                 animation = "walkNorth";
-                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y -= walkSpeed;
+                if (!map.IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y -= walkSpeed;
 
             }
             else if (deplacement.X == -2 && deplacement.Y == 0)
@@ -145,7 +145,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth - 1);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight);
                 animation = "walkWest";
-                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X -= walkSpeed;
+                if (!map.IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X -= walkSpeed;
 
             }
             else if (deplacement.X == 0 && deplacement.Y == 2)
@@ -153,7 +153,7 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight + 1);
                 animation = "walkSouth";
-                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y += walkSpeed;
+                if (!map.IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.Y += walkSpeed;
 
             }
             else if (deplacement.X == 2 && deplacement.Y == 0)
@@ -161,29 +161,20 @@ namespace GrammaCast
                 ushort tx = (ushort)(this.PositionEnnemi.X / map.TileMap.TileWidth + 1);
                 ushort ty = (ushort)(this.PositionEnnemi.Y / map.TileMap.TileHeight);
                 animation = "walkEast";
-                if (!IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X += walkSpeed;
+                if (!map.IsCollisionEnnemi(tx, ty)) this.PositionEnnemi.X += walkSpeed;
             }
             else animation = "idle";
             return animation;
         }
 
-        public bool IsCollisionEnnemi(ushort x, ushort y)
-        {
 
-            TiledMapTile? tile;
-            if (map.TileMapLayerZone.TryGetTile(x, y, out tile) == false)
-                return true;
-            if (tile.Value.IsBlank)
-                return true;
-            return false;
-        }
         private bool EstProche()
         {
             float posX = Math.Abs(this.PositionEnnemi.X - perso.PositionHero.X);
             float posY = Math.Abs(this.PositionEnnemi.Y - perso.PositionHero.Y);
             if (posX <= 50 && posY <= 50)
             {
-                if (perso.IsCollisionZone()) return true;
+                if (map.IsCollisionZone(perso)) return true;
                 else return false;
             }                
             else return false;

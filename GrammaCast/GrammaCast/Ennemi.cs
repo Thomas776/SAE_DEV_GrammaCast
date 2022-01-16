@@ -76,7 +76,7 @@ namespace GrammaCast
             {
                 if (timerApparition == null)
                 {
-                    timerApparition = new Timer(rand.Next(5,25));
+                    timerApparition = new Timer(rand.Next(5,20));
                 }
                 if (timerApparition.AddTick(deltaSeconds) == false)
                 {

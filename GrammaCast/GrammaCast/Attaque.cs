@@ -20,41 +20,54 @@ namespace GrammaCast
         public Hero perso;
         public Ennemi ennemi;
         private string fontPath;
-
+        private string pointFontPath;
+        private SpriteFont pointFont;
         private SpriteFont attaqueFont;
         private AnimatedSprite asAttack;
         private string attaqueLettre;
         public Timer timerAnimation;
         public Timer timerAttaque;
         Random rand = new Random();
-        public float point = 400;
+        public float point = 350;
         public float sommePoint = 0;
+        
+        private int vitesse = 100;
 
 
         public Attaque()
         {
             FontPath = "font";
+            PointFontPath = "pointfont";
             Actif = false;
             Final = false;
             Animation = false;
             AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
+            
         }
 
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             this.AttaqueFont = Content.Load<SpriteFont>(this.FontPath);
+            this.PointFont = Content.Load<SpriteFont>(this.PointFontPath);
             for (int i = 0; i < attaqueSprite.Length; i++)
             {
                 attaqueSprite[i] = Content.Load<SpriteSheet>(spriteChemin[i], new JsonContentLoader());
             }
             this.AsAttack = new AnimatedSprite(attaqueSprite[rand.Next(attaqueSprite.Length)]);
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
-
+            
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float apparitionSpeed = deltaSeconds * this.Vitesse;
+            if (perso.PositionHero.Y >= windowHeight / 2)
+                this.PositionAttaque = new Vector2(perso.PositionHero.X, perso.PositionHero.Y - 100);
+            else
+                this.PositionAttaque = new Vector2(perso.PositionHero.X, perso.PositionHero.Y + 25);
+
             if (this.Actif)
             {
+                
                 if (timerAttaque == null)
                 {
                     timerAttaque = new Timer(1000);
@@ -64,11 +77,11 @@ namespace GrammaCast
             }
             if (this.Final)
             {
+                this.PositionPoint = new Vector2(this.PositionPoint.X, this.PositionPoint.Y - apparitionSpeed);
                 this.AsAttack.Play("attack");
-
+                
                 if (timerAnimation.AddTick(deltaSeconds) == false)
                 {
-                    
                     sommePoint += point / timerAttaque.Tick;
                     Console.WriteLine($"{sommePoint}, {timerAttaque.Tick}");
                     timerAttaque = null;
@@ -77,10 +90,13 @@ namespace GrammaCast
                     this.Actif = false;
                     this.AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
                     this.AsAttack = new AnimatedSprite(attaqueSprite[rand.Next(attaqueSprite.Length)]);
-                    }
+                    
+                }
             }
             else
-            {                
+            {
+                if (this.PositionPoint != perso.PositionHero)
+                    PositionPoint = new Vector2(perso.PositionHero.X, perso.PositionHero.Y-30);
                 this.GetLetter();
             }
             this.AsAttack.Update(gameTime);
@@ -89,8 +105,12 @@ namespace GrammaCast
         public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
         {
             if (this.Animation)
-                _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y - 100));
-            _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", new Vector2(perso.PositionHero.X,perso.PositionHero.Y -100), Color.White);
+            {
+                _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y));
+                _spriteBatch.DrawString(this.PointFont, $"{Math.Round(this.sommePoint+200,0)}", this.PositionPoint, Color.Black);
+            }
+            else
+                _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", this.PositionAttaque, Color.White);
             
         }
         public string FontPath
@@ -98,7 +118,16 @@ namespace GrammaCast
             get => fontPath;
             private set => fontPath = value;
         }
-
+        public string PointFontPath
+        {
+            get => pointFontPath;
+            private set => pointFontPath = value;
+        }
+        public SpriteFont PointFont
+        {
+            get => pointFont;
+            private set => pointFont = value;
+        }
         public SpriteFont AttaqueFont
         {
             get => attaqueFont;
@@ -112,10 +141,17 @@ namespace GrammaCast
         public bool Actif;
         public bool Final;
         public bool Animation;
+        public Vector2 PositionAttaque;
+        public Vector2 PositionPoint;
         public string AttaqueLettre
         {
             get => attaqueLettre;
             private set => attaqueLettre = value;
+        }
+        public int Vitesse
+        {
+            get => vitesse;
+            private set => vitesse = value;
         }
         public bool GetLetter()
         {
@@ -133,8 +169,13 @@ namespace GrammaCast
                 }
             }
             return false;
-
-
         }
+        public bool NbrPoint()
+        {
+            if (sommePoint >= 3000)
+                return true;
+            else
+                return false;
+        }   
     }
 }

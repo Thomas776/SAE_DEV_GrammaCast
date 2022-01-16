@@ -13,6 +13,7 @@ namespace GrammaCast
     {
         public MapVillage[] mapV;
         public MapForet mapF;
+        public MapBoss[] mapB;
 
         private int vitesseHero;
         private AnimatedSprite asHero;
@@ -121,7 +122,15 @@ namespace GrammaCast
             {
                 animation = DeplacementF(mapF, walkSpeed);
             }
-            
+            else if (mapB[0].Actif)
+            {
+                animation = DeplacementB(mapB[0], walkSpeed);
+            }
+            else if (mapB[1].Actif)
+            {
+                animation = DeplacementB(mapB[1], walkSpeed);
+            }
+
             return animation;
         }
         public string DeplacementV(MapVillage map, float walkSpeed)
@@ -242,6 +251,65 @@ namespace GrammaCast
                 }
             return animation;
         }
+        public string DeplacementB(MapBoss map, float walkSpeed)
+        {
+            string animation = animationBase;
+
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth - 1);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+                animation = "walkWest";
+                if (!map.IsCollisionHero(tx, ty))
+                    this.PositionHero.X -= walkSpeed;
+                indiceAnimation = 1;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth + 1);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+                animation = "walkEast";
+                if (!map.IsCollisionHero(tx, ty))
+                    this.PositionHero.X += walkSpeed;
+                indiceAnimation = 2;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+                animation = "walkNorth";
+                if (!map.IsCollisionHero(tx, ty))
+                    this.PositionHero.Y -= walkSpeed;
+
+                indiceAnimation = 3;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight + 1);
+                animation = "walkSouth";
+                if (!map.IsCollisionHero(tx, ty))
+                    this.PositionHero.Y += walkSpeed;
+                indiceAnimation = 0;
+            }
+            else switch (indiceAnimation)
+                {
+                    case 0:
+                        animation = "idleSouth";
+                        break;
+                    case 1:
+                        animation = "idleWest";
+                        break;
+                    case 2:
+                        animation = "idleEast";
+                        break;
+                    case 3:
+                        animation = "idleNorth";
+                        break;
+                }
+            return animation;
+        }
         public bool TestTransitionV(MapVillage map)
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -284,6 +352,47 @@ namespace GrammaCast
             else return false;
         }
         public bool TestTransitionF(MapForet map)
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth - 1);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+
+                if (map.IsTransition(tx, ty))
+                    return true;
+                return false;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth + 1);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+
+                if (map.IsTransition(tx, ty))
+                    return true;
+                return false;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight);
+
+                if (map.IsTransition(tx, ty))
+                    return true;
+                return false;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                ushort tx = (ushort)(this.PositionHero.X / map.TileMap.TileWidth);
+                ushort ty = (ushort)(this.PositionHero.Y / map.TileMap.TileHeight + 1);
+
+                if (map.IsTransition(tx, ty))
+                    return true;
+                return false;
+            }
+            else return false;
+        }
+        public bool TestTransitionB(MapBoss map)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Left))

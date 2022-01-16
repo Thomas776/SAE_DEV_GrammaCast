@@ -15,10 +15,12 @@ namespace GrammaCast
         Hero heroMage;
         MapForet mapForet;
         MapVillage[] mapVillage;
+        MapBoss[] mapBoss;
         Boss bossGolem;
         Ennemi[] ennemisForet;
         public Attaque attaqueGramma;
         int indice = 0;
+        int indiceB = 0;
 
 
         public Game1()
@@ -35,11 +37,12 @@ namespace GrammaCast
             mapForet = new MapForet("foret");
             mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
             mapVillage[0].Actif = true;
+            mapBoss = new MapBoss[] { new MapBoss("ZoneDeLaTour"), new MapBoss("ZoneFinale") };
 
 
             Vector2 positionHero = new Vector2(64, 192);
-            bossGolem = new Boss("BossSprite.sf", new Vector2(GraphicsDevice.Viewport.Width/2, GraphicsDevice.Viewport.Height/4));
-            heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet };
+            bossGolem = new Boss("BossSprite.sf", new Vector2(352,64));
+            heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet, mapB = mapBoss };
             attaqueGramma = new Attaque() { perso = heroMage};
             ennemisForet = new Ennemi[]
             {
@@ -57,6 +60,10 @@ namespace GrammaCast
             foreach(MapVillage v in mapVillage)
             {
                 v.LoadContent(Content, GraphicsDevice);
+            }
+            foreach (MapBoss b in mapBoss)
+            {
+                b.LoadContent(Content, GraphicsDevice);
             }
             mapForet.LoadContent(Content, GraphicsDevice);
             _graphics.PreferredBackBufferWidth = mapForet.TileMap.Height * mapForet.TileMap.TileHeight;
@@ -83,10 +90,10 @@ namespace GrammaCast
                 mapVillage[indice].Update(gameTime);
                 if (heroMage.TestTransitionV(mapVillage[indice]))
                 {
-                    if(indice == 0)
+                    if (indice == 0)
                     {
                         mapVillage[indice].Actif = false;
-                        indice = 1;
+                        indice++;
                         mapVillage[indice].Actif = true;
                         positionHero = new Vector2(20, heroMage.PositionHero.Y);
                         heroMage.PositionHero = positionHero;
@@ -96,7 +103,7 @@ namespace GrammaCast
                         if (heroMage.PositionHero.X < GraphicsDevice.Viewport.Width / 2)
                         {
                             mapVillage[indice].Actif = false;
-                            indice = 0;
+                            indice--;
                             mapVillage[indice].Actif = true;
                             positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
                             heroMage.PositionHero = positionHero;
@@ -108,24 +115,79 @@ namespace GrammaCast
                             positionHero = new Vector2(20, heroMage.PositionHero.Y);
                             heroMage.PositionHero = positionHero;
                         }
-
                     }
-
-                    
                 }
             }
             else if (mapForet.Actif)
             {
                 mapForet.Update(gameTime);
-                if (heroMage.TestTransitionF(mapForet))
+                if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 2)
                 {
-                    mapVillage[indice].Actif = true;
-                    mapForet.Actif = false;
-                    positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
-                    heroMage.PositionHero = positionHero;
+                    if (heroMage.TestTransitionF(mapForet))
+                    {
+                        mapVillage[indice].Actif = true;
+                        mapForet.Actif = false;
+                        positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
+                        heroMage.PositionHero = positionHero;
+                    }
                 }
+                else
+                {
+                    if (heroMage.TestTransitionF(mapForet))
+                    {
+                        mapBoss[indiceB].Actif = true;
+                        mapForet.Actif = false;
+                        positionHero = new Vector2(heroMage.PositionHero.X, GraphicsDevice.Viewport.Height - 60);
+                        heroMage.PositionHero = positionHero;
+                    }
+                }
+
             }
-            bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            else if (mapBoss[indiceB].Actif)
+            {
+                mapBoss[indiceB].Update(gameTime);
+                if(indiceB == 0)
+                {
+                    if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 4 * 3)
+                    {
+                        if (heroMage.TestTransitionB(mapBoss[indiceB]))
+                        {
+                            mapForet.Actif = true;
+                            mapBoss[indiceB].Actif = false;
+                            positionHero = new Vector2(heroMage.PositionHero.X, 20);
+                            heroMage.PositionHero = positionHero;
+                        }
+                    }
+                    else if (attaqueGramma.NbrPoint())
+                    {
+                        if (heroMage.TestTransitionB(mapBoss[indiceB]))
+                        {
+                            mapBoss[indiceB].Actif = false;
+                            indiceB++;
+                            mapBoss[indiceB].Actif = true;
+                            positionHero = new Vector2(380, 380);
+                            heroMage.PositionHero = positionHero;
+                        }
+                    }
+                }
+                else
+                {
+                    if (heroMage.TestTransitionB(mapBoss[indiceB]))
+                    {
+                        mapBoss[indiceB].Actif = false;
+                        indiceB--;
+                        mapBoss[indiceB].Actif = true;
+                        positionHero = new Vector2(376, 464);
+                        heroMage.PositionHero = positionHero;
+                    }
+                }
+                
+            }
+            if (mapBoss[1].Actif == true)
+            {
+                bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
+            
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             if (mapForet.Actif)
             {
@@ -134,7 +196,8 @@ namespace GrammaCast
                     ef.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                 }
             }
-            if (attaqueGramma.Actif) attaqueGramma.Update(gameTime);
+            if (attaqueGramma.Actif)
+                attaqueGramma.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             // TODO: Add your update logic here
 
@@ -148,9 +211,14 @@ namespace GrammaCast
             _spriteBatch.Begin();
             if (mapVillage[indice].Actif)
                 mapVillage[indice].Draw();
-            else if 
-                (mapForet.Actif) mapForet.Draw();
-            bossGolem.Draw(gameTime, _spriteBatch);
+            else if (mapForet.Actif) 
+                mapForet.Draw();
+            else if (mapBoss[indiceB].Actif)
+                mapBoss[indiceB].Draw();
+            if (mapBoss[1].Actif == true)
+            {
+                bossGolem.Draw(gameTime, _spriteBatch);
+            }
             if (mapForet.Actif)
             {
                 foreach (Ennemi ef in ennemisForet)

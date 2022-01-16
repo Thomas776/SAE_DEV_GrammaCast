@@ -235,6 +235,13 @@
 /processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
 /build:obeliskSprite.sf
 
+#begin pointfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:pointfont.spritefont
+
 #begin PoisonCast.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -364,4 +371,14 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TileSetDebug.png
+
+#begin ZoneDeLaTour.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:ZoneDeLaTour.tmx
+
+#begin ZoneFinale.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:ZoneFinale.tmx
 

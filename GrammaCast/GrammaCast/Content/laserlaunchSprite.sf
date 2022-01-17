@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "laserlaunch.png",
+    "regionWidth": 80,
+    "regionHeight": 100
+  },
+  "cycles": {
+    "laserlaunch": {
+      "frames": [0,1,2,3,4,5,6,7],
+      "isLooping": false,
+      "frameDuration": 0.06
+    }
+  }
+}

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Screens;
-using MonoGame.Extended.Screens.Transitions;
+
 
 namespace GrammaCast
 {
@@ -19,6 +18,7 @@ namespace GrammaCast
         Boss bossGolem;
         Ennemi[] ennemisForet;
         public Attaque attaqueGramma;
+        public AttaqueBoss attaqueSpell;
         int indice = 0;
         int indiceB = 0;
 
@@ -41,9 +41,11 @@ namespace GrammaCast
 
 
             Vector2 positionHero = new Vector2(64, 192);
-            bossGolem = new Boss("BossSprite.sf", new Vector2(352,64));
+            
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet, mapB = mapBoss };
+            bossGolem = new Boss("BossSprite.sf", new Vector2(387, 65)) { map = mapBoss[1], hero = heroMage };
             attaqueGramma = new Attaque() { perso = heroMage};
+            attaqueSpell = new AttaqueBoss() {perso = heroMage, golem = bossGolem };
             ennemisForet = new Ennemi[]
             {
                 new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
@@ -69,13 +71,14 @@ namespace GrammaCast
             _graphics.PreferredBackBufferWidth = mapForet.TileMap.Height * mapForet.TileMap.TileHeight;
             _graphics.PreferredBackBufferHeight = mapForet.TileMap.Width * mapForet.TileMap.TileWidth;
             _graphics.ApplyChanges();
-            bossGolem.LoadContent(Content);
-            heroMage.LoadContent(Content);
+            heroMage.LoadContent(Content, GraphicsDevice);
+            bossGolem.LoadContent(Content, GraphicsDevice);            
             foreach (Ennemi ef in ennemisForet)
             {
                 ef.LoadContent(Content);
             }
             attaqueGramma.LoadContent(Content);
+            attaqueSpell.LoadContent(Content);
 
 
             // TODO: use this.Content to load your game content here
@@ -172,7 +175,7 @@ namespace GrammaCast
                 }
                 else
                 {
-                    if (heroMage.TestTransitionB(mapBoss[indiceB]))
+                    if (heroMage.TestTransitionB(mapBoss[indiceB]) && bossGolem.Dead)
                     {
                         mapBoss[indiceB].Actif = false;
                         indiceB--;
@@ -186,6 +189,7 @@ namespace GrammaCast
             if (mapBoss[1].Actif == true)
             {
                 bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+                attaqueSpell.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             }
             
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -217,19 +221,22 @@ namespace GrammaCast
                 mapBoss[indiceB].Draw();
             if (mapBoss[1].Actif == true)
             {
-                bossGolem.Draw(gameTime, _spriteBatch);
+                bossGolem.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+                if (attaqueSpell.Actif)
+                    attaqueSpell.Draw(gameTime, _spriteBatch);
             }
             if (mapForet.Actif)
             {
-                foreach (Ennemi ef in ennemisForet)
+                foreach (Ennemi e in ennemisForet)
                 {
-                    ef.Draw(gameTime, _spriteBatch);
+                    e.Draw(gameTime, _spriteBatch);
                 }
             }
                 
             if (attaqueGramma.Actif) 
                 attaqueGramma.Draw(gameTime, _spriteBatch);
-            heroMage.Draw(gameTime, _spriteBatch);
+            heroMage.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             
             _spriteBatch.End();
             // TODO: Add your drawing code here

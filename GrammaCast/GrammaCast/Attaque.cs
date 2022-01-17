@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Tiled;
 using System;
 
 
@@ -29,10 +28,8 @@ namespace GrammaCast
         public Timer timerAttaque;
         Random rand = new Random();
         public float point = 350;
-        public float sommePoint = 0;
-        
+        public float sommePoint = 0;        
         private int vitesse = 100;
-
 
         public Attaque()
         {
@@ -44,7 +41,6 @@ namespace GrammaCast
             AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
             
         }
-
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             this.AttaqueFont = Content.Load<SpriteFont>(this.FontPath);
@@ -107,7 +103,7 @@ namespace GrammaCast
             if (this.Animation)
             {
                 _spriteBatch.Draw(this.AsAttack, new Vector2(perso.PositionHero.X, perso.PositionHero.Y));
-                _spriteBatch.DrawString(this.PointFont, $"{Math.Round(this.sommePoint+200,0)}", this.PositionPoint, Color.Black);
+                _spriteBatch.DrawString(this.PointFont, $"{Math.Round(this.sommePoint,0)}", this.PositionPoint, Color.Black);
             }
             else
                 _spriteBatch.DrawString(this.AttaqueFont, $"{this.AttaqueLettre}", this.PositionAttaque, Color.White);
@@ -153,7 +149,7 @@ namespace GrammaCast
             get => vitesse;
             private set => vitesse = value;
         }
-        public bool GetLetter()
+        public void GetLetter()
         {
             //Console.WriteLine("aaaa");
             var keyboardState = Keyboard.GetState();
@@ -165,14 +161,12 @@ namespace GrammaCast
                     timerAnimation = new Timer(0.4f);
                     this.Final = true;
                     this.Animation = true;
-                    return true;
                 }
             }
-            return false;
         }
         public bool NbrPoint()
         {
-            if (sommePoint >= 3000)
+            if (sommePoint >= 500)
                 return true;
             else
                 return false;

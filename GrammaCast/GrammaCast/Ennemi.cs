@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Tiled;
 using System;
 
 namespace GrammaCast
@@ -80,6 +78,7 @@ namespace GrammaCast
                 }
                 if (timerApparition.AddTick(deltaSeconds) == false)
                 {
+                    this.ASEnnemi = new AnimatedSprite(ennemiSprite[rand.Next(ennemiSprite.Length)]);
                     this.Actif = true;
                     this.Block = false;
                     timerApparition = null;

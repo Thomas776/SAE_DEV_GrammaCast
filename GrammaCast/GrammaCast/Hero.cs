@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Tiled;
 using System;
 
 namespace GrammaCast
@@ -20,7 +19,10 @@ namespace GrammaCast
         private string path;
         int indiceAnimation = 0;
         string animationBase = "idleSouth";
-
+        public int maxHP = 3;
+        public int hp = 3;
+        Texture2D rectHp;
+        int rect;
         public Hero(string path, Vector2 positionHero, int vitesseHero)
         {
             Path = path;
@@ -29,15 +31,20 @@ namespace GrammaCast
             Block = false;
         }
 
-        public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
+        public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content, GraphicsDevice gd)
         {
 
             SpriteSheet spriteSheet = Content.Load<SpriteSheet>(this.Path, new JsonContentLoader());
             this.ASHero = new AnimatedSprite(spriteSheet);
+            rectHp = new Texture2D(gd, gd.Viewport.Width/2, 10);
+            Color[] data = new Color[gd.Viewport.Width/2 * 10];
+            for (int i = 0; i < data.Length; i++) data[i] = Color.Red;
+            rectHp.SetData(data);
         }
 
-        public void Update(GameTime gameTime, float windowWidth, float windowHeight)
+        public void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
+            rect = this.hp * (windowWidth/3) / this.maxHP;
             string animation = animationBase;
             if (this.Block == false) 
                 animation = this.DeplacementHero(gameTime, windowWidth, windowHeight, ref indiceAnimation);
@@ -62,9 +69,13 @@ namespace GrammaCast
             this.ASHero.Play(animation);
             this.ASHero.Update(gameTime);
         }
-        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch, int windowWidth, int windowHeight)
         {
             _spriteBatch.Draw(this.ASHero, this.PositionHero);
+            if (mapB[1].Actif)
+            {
+                _spriteBatch.Draw(this.rectHp, new Rectangle(0, windowHeight-15, rect, 10), Color.Red);
+            }
         }
 
         public string Path

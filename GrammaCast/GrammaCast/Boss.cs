@@ -16,8 +16,8 @@ namespace GrammaCast
         private AnimatedSprite asLaser;
         private AnimatedSprite asArm;
         private string path;
-        public int maxHP = 1000;
-        public float hp = 1000;
+        public int maxHP = 10000;
+        public float hp = 10000;
         public bool Actif;
         string animation = "idleéveilBoss";
         Timer timerEveil;

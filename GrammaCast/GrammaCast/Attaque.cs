@@ -166,7 +166,7 @@ namespace GrammaCast
         }
         public bool NbrPoint()
         {
-            if (sommePoint >= 300)
+            if (sommePoint >= 3000)
                 return true;
             else
                 return false;

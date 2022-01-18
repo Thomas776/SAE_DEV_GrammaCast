@@ -34,7 +34,6 @@ namespace GrammaCast
         int animationRand;
         int vitesse = 500;
         Vector2 positionBras;
-        public bool changementMusique;
         public Boss(string path, Vector2 positionBoss)
         {
             Path = path;
@@ -151,10 +150,10 @@ namespace GrammaCast
                 else if (timerDeath.AddTick(deltaSeconds) == false)
                 {
                     this.Dead = true;
-                    this.Block = true;
+                    this.Block = false;
                     this.Actif = false;
                     animation = "idleDeathBoss";                    
-                    changementMusique = true;
+                    
                 }
                 this.ASBoss.Play(animation);
             }                

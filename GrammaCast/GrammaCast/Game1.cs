@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
 
 namespace GrammaCast
 {
@@ -29,6 +30,7 @@ namespace GrammaCast
         public bool changementActif; //permet d'indiquer s'il faut changer la musique
         Texture2D _darken;
         Dialogue dialogue;
+        string songActuel = "s";
 
         public Game1()
         {
@@ -50,7 +52,7 @@ namespace GrammaCast
             
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet, mapB = mapBoss };
             bossGolem = new Boss("BossSprite.sf", new Vector2(387, 65)) 
-            { map = mapBoss[1], hero = heroMage, changementMusique = changementActif};
+            { map = mapBoss[1], hero = heroMage};
             bossGolem.Block = true;
 
             attaqueGramma = new Attaque() { perso = heroMage};
@@ -71,7 +73,7 @@ namespace GrammaCast
                 new Villageois(new Vector2(240, 624),"villageoiseSprite.sf") { map = mapVillage[1], perso = heroMage}
             };
 
-            dialogue = new Dialogue() { perso = heroMage, villageois = villageois[0], map = mapBoss, golem = bossGolem };
+            dialogue = new Dialogue() { perso = heroMage, villageois = villageois[0], map = mapBoss, golem = bossGolem};
             villageois[0].Block = true;
 
             MediaPlayer.IsRepeating = true;
@@ -164,7 +166,8 @@ namespace GrammaCast
                             mapForet.Actif = true;
                             positionHero = new Vector2(20, heroMage.PositionHero.Y);
                             heroMage.PositionHero = positionHero;
-                            changementActif = true; //permet d'indiquer s'il faut changer la musique
+                            if (!bossGolem.Dead)
+                                changementActif = true; //permet d'indiquer s'il faut changer la musique
                         }
                     }
                 }
@@ -180,7 +183,8 @@ namespace GrammaCast
                         mapForet.Actif = false;
                         positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
                         heroMage.PositionHero = positionHero;
-                        changementActif = true;
+                        if (!bossGolem.Dead)
+                            changementActif = true;
                     }
                 }
                 else
@@ -212,18 +216,23 @@ namespace GrammaCast
                     }
                     if (heroMage.TestTransitionB(mapBoss[indiceB]))
                     {
-                        if (attaqueGramma.NbrPoint())
+                        if (bossGolem.Dead)
+                        {
+
+                        }
+                        else if (attaqueGramma.NbrPoint())
                         {
                             mapBoss[indiceB].Actif = false;
                             indiceB++;
                             mapBoss[indiceB].Actif = true;
                             positionHero = new Vector2(380, 380);
                             heroMage.PositionHero = positionHero;
-                            changementActif = true; //permet d'indiquer s'il faut changer la musique
+                            if (!bossGolem.Dead)
+                                changementActif = true; //permet d'indiquer s'il faut changer la musique
                             MediaPlayer.Volume = 0.05f;
                             heroMage.Block = true;
                         }
-                        else
+                        else if (!bossGolem.Dead)
                         {
                             heroMage.Block = true;
                         }  
@@ -247,6 +256,8 @@ namespace GrammaCast
                 bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                 if (!bossGolem.Dead)
                     attaqueSpell.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+                else if (songActuel != "songFinal")
+                    changementActif = true;
             }
             
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -267,6 +278,7 @@ namespace GrammaCast
 
             if (changementActif)  //permet d'indiquer s'il faut changer la musique
             {
+                Console.WriteLine("ok");
                 Musique();
             }
 
@@ -328,8 +340,8 @@ namespace GrammaCast
         }
         public void Musique()
         {
-
-            if (mapForet.Actif || mapBoss[0].Actif)
+            Console.WriteLine("bb");
+            if ((mapForet.Actif || mapBoss[0].Actif) && !bossGolem.Dead)
             {
                 MediaPlayer.Play(songForest);
                 changementActif = false; 
@@ -341,11 +353,14 @@ namespace GrammaCast
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
             }
-            else if (bossGolem.Block && bossGolem.Dead)
+            
+            else if (bossGolem.Dead && !bossGolem.Actif)
             {
+                Console.WriteLine("ICI");
                 MediaPlayer.Play(songFinal);
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
+                songActuel = "songFinal";
             }
             else if (mapVillage[0].Actif || (mapVillage[1].Actif))
             {
@@ -353,7 +368,7 @@ namespace GrammaCast
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
             }
-            
+            Console.WriteLine($"{bossGolem.Dead}, !{bossGolem.Actif}");
         }
     }
 }

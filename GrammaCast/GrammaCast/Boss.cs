@@ -16,8 +16,8 @@ namespace GrammaCast
         private AnimatedSprite asLaser;
         private AnimatedSprite asArm;
         private string path;
-        public int maxHP = 10000;
-        public float hp = 10000;
+        public int maxHP = 1000;
+        public float hp = 1000;
         public bool Actif;
         string animation = "idleéveilBoss";
         Timer timerEveil;
@@ -67,84 +67,93 @@ namespace GrammaCast
             float vitesseBras = deltaSeconds * vitesse;
             rect = (int)Math.Round(this.hp,0) * windowWidth / this.maxHP;
             if (map.Actif)
-            {                
+            {     
                 if (!this.Dead)
                 {
-                    if (!this.Actif)
+                    if (!this.Block)
                     {
-                        this.Eveil(gameTime);                        
-                    }
-                    else
-                    {
-                        if (!this.Pret)
+                        if (!this.Actif)
                         {
-                            ProchaineAttaque(gameTime);
-                            animation = "idleBoss";
-                            positionBras = new Vector2(windowWidth + 100, rand.Next(windowHeight/5,windowHeight/5*3));
+                            this.Eveil(gameTime);
                         }
-                        if (this.hp <= 0)
+                        else
                         {
-                            this.Dead = true;
-                            animation = "deathoreveilBoss";
-                            timerDeath = new Timer(2.8f);
-                        }
-                        if (this.Pret)
-                        {
-                            if (timerAttaque == null)
+                            if (!this.Pret)
                             {
-                                timerAttaque = new Timer(rand.Next(5, 10));
-                                x = rand.Next(windowWidth/4, windowWidth / 4 * 3);
-                                animationRand = rand.Next(4);
-                                switch (animationRand)
+                                ProchaineAttaque(gameTime);
+                                animation = "idleBoss";
+                                positionBras = new Vector2(windowWidth + 100, rand.Next(windowHeight / 5, windowHeight / 5 * 3));
+                            }
+                            if (this.hp <= 0)
+                            {
+                                this.Dead = true;
+                                animation = "deathoreveilBoss";
+                                timerDeath = new Timer(2.8f);
+                                
+                                hero.Block = true;
+                            }
+                            if (this.Pret)
+                            {
+                                if (timerAttaque == null)
                                 {
-                                    case 0:
-                                        animation = "lightBoss"; break;
-                                    case 1:
-                                        animation = "attackArmureBoss"; break;
-                                    case 2:
-                                        animation = "lightHeadBoss"; break;
-                                    default:
-                                        animation = "attackBrasBoss"; break;
+                                    timerAttaque = new Timer(rand.Next(5, 10));
+                                    x = rand.Next(windowWidth / 4, windowWidth / 4 * 3);
+                                    animationRand = rand.Next(4);
+                                    switch (animationRand)
+                                    {
+                                        case 0:
+                                            animation = "lightBoss"; break;
+                                        case 1:
+                                            animation = "attackArmureBoss"; break;
+                                        case 2:
+                                            animation = "lightHeadBoss"; break;
+                                        default:
+                                            animation = "attackBrasBoss"; break;
+                                    }
                                 }
+                                else if (timerAttaque.Tick <= 2.16f)
+                                {
+                                    this.ASLaserLaunch.Play("laserlaunch");
+                                }
+                                else
+                                {
+                                    this.ASLaser.Play("laser");
+                                }
+                                if (this.IsCollision() && timerAttaque.Tick > 3)
+                                {
+                                    hero.hp -= 1;
+                                    timerAttaque = null;
+                                    timerRepos = null;
+                                    this.Pret = false;
+                                }
+                                else if (timerAttaque.AddTick(deltaSeconds) == false)
+                                {
+                                    timerAttaque = null;
+                                    timerRepos = null;
+                                    this.Pret = false;
+                                }
+                                if (positionBras.X > 0)
+                                {
+                                    positionBras.X -= vitesseBras;
+                                }
+                                else
+                                {
+                                    positionBras.X = windowWidth + 100;
+                                    positionBras.Y = rand.Next(windowHeight / 5, windowHeight / 5 * 3);
+                                }
+                                this.ASArm.Play("glowing");
                             }
-                            else if (timerAttaque.Tick <= 2.16f)
-                            {
-                                this.ASLaserLaunch.Play("laserlaunch");
-                            }
-                            else
-                            {
-                                this.ASLaser.Play("laser");
-                            }
-                            if(this.IsCollision() && timerAttaque.Tick > 3)
-                            {
-                                hero.hp -= 1;
-                                timerAttaque = null;
-                                timerRepos = null;
-                                this.Pret = false;
-                            }
-                            else if (timerAttaque.AddTick(deltaSeconds) == false)
-                            {
-                                timerAttaque = null;
-                                timerRepos = null;
-                                this.Pret = false;
-                            }
-                            if (positionBras.X > 0)
-                            {
-                                positionBras.X -= vitesseBras;
-                            }
-                            else
-                            {
-                                positionBras.X = windowWidth + 100;
-                                positionBras.Y = rand.Next(windowHeight / 5, windowHeight / 5 * 3);
-                            }                          
-                            this.ASArm.Play("glowing");
                         }
-                    }                                     
+                        
+                    }
+                                                      
                 }
                 else if (timerDeath.AddTick(deltaSeconds) == false)
                 {
-                    animation = "idleéveilBoss";
+                    this.Dead = true;
+                    this.Block = true;
                     this.Actif = false;
+                    animation = "idleDeathBoss";                    
                     changementMusique = true;
                 }
                 this.ASBoss.Play(animation);
@@ -170,7 +179,6 @@ namespace GrammaCast
                 }                
             }
         }
-
         public string Path
         {
             get => path;
@@ -199,6 +207,7 @@ namespace GrammaCast
             private set => asArm = value;
         }
         public Vector2 PositionBoss;
+        public bool Block;
         public bool Eveil(GameTime gt)
         {
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;
@@ -219,6 +228,7 @@ namespace GrammaCast
                     if (timerEveil.Tick >= 5.25f)
                     {
                         animation = "eveilBoss";
+                        
                         return false;
                     }
                 }
@@ -254,17 +264,5 @@ namespace GrammaCast
             else
                 return false;
         }
-
-        /*
-                    KeyboardState keyboardState = Keyboard.GetState();
-                    if (keyboardState.IsKeyDown(Keys.A)) animation = "idleBoss";
-                    else if (keyboardState.IsKeyDown(Keys.Z)) animation = "lightBoss";
-                    else if (keyboardState.IsKeyDown(Keys.E)) animation = "attackBrasBoss";
-                    else if (keyboardState.IsKeyDown(Keys.R)) animation = "lightHeadBoss";
-                    else if (keyboardState.IsKeyDown(Keys.T)) animation = "attackArmureBoss";
-                    else if (keyboardState.IsKeyDown(Keys.Y)) animation = "deathoreveilBoss";
-                    else if (keyboardState.IsKeyDown(Keys.U)) animation = "idleDeathBoss";
-                    else if (keyboardState.IsKeyDown(Keys.I)) animation = "eveilBoss";
-                    else animation = "idleéveilBoss";*/
     }
 }

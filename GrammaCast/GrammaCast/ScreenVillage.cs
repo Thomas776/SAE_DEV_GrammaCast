@@ -9,6 +9,7 @@ namespace GrammaCast
     {
         private TiledMap tileMap;
         private TiledMapRenderer tileMapRenderer;
+        private TiledMapTileLayer tileMapLayerZone;
         private TiledMapTileLayer tileMapLayerRebords;
         private TiledMapTileLayer tileMapLayerTransition;
         private TiledMapTileLayer tileMapLayerObstacles;
@@ -24,6 +25,7 @@ namespace GrammaCast
         {
             this.TileMap = Content.Load<TiledMap>(this.Path);
             this.TileMapRenderer = new TiledMapRenderer(gd, this.TileMap);
+            this.TileMapLayerZone = this.TileMap.GetLayer<TiledMapTileLayer>("zone");
             this.TileMapLayerRebords = this.TileMap.GetLayer<TiledMapTileLayer>("rebords");
             this.TileMapLayerTransition = this.TileMap.GetLayer<TiledMapTileLayer>("transition");
             this.TileMapLayerObstacles = this.TileMap.GetLayer<TiledMapTileLayer>("obstacles");
@@ -53,6 +55,11 @@ namespace GrammaCast
         {
             get => tileMapRenderer;
             private set => tileMapRenderer = value;
+        }
+        public TiledMapTileLayer TileMapLayerZone
+        {
+            get => tileMapLayerZone;
+            private set => tileMapLayerZone = value;
         }
         public TiledMapTileLayer TileMapLayerRebords
         {
@@ -98,6 +105,15 @@ namespace GrammaCast
             if (this.TileMapLayerTransition.TryGetTile(x, y, out tile) == false)
                 return true;
             if (!tile.Value.IsBlank)
+                return true;
+            return false;
+        }
+        public bool IsCollisionZone(ushort x, ushort y)
+        {
+            TiledMapTile? tile;
+            if (this.TileMapLayerZone.TryGetTile(x, y, out tile) == false)
+                return true;
+            if (tile.Value.IsBlank)
                 return true;
             return false;
         }

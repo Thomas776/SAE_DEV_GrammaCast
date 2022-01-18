@@ -17,6 +17,7 @@ namespace GrammaCast
         MapBoss[] mapBoss;
         Boss bossGolem;
         Ennemi[] ennemisForet;
+        Villageois[] villageois;
         public Attaque attaqueGramma;
         public AttaqueBoss attaqueSpell;
         int indice = 0;
@@ -25,7 +26,9 @@ namespace GrammaCast
         private Song songForest;
         private Song songBoss;
         private Song songFinal;
-        public bool changementActif;
+        public bool changementActif; //permet d'indiquer s'il faut changer la musique
+        Texture2D _darken;
+        Dialogue dialogue;
 
         public Game1()
         {
@@ -36,7 +39,6 @@ namespace GrammaCast
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
 
             mapForet = new MapForet("foret");
             mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
@@ -47,9 +49,13 @@ namespace GrammaCast
             Vector2 positionHero = new Vector2(64, 192);
             
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet, mapB = mapBoss };
-            bossGolem = new Boss("BossSprite.sf", new Vector2(387, 65)) { map = mapBoss[1], hero = heroMage, changementMusique = changementActif};
+            bossGolem = new Boss("BossSprite.sf", new Vector2(387, 65)) 
+            { map = mapBoss[1], hero = heroMage, changementMusique = changementActif};
+            bossGolem.Block = true;
+
             attaqueGramma = new Attaque() { perso = heroMage};
             attaqueSpell = new AttaqueBoss() {perso = heroMage, golem = bossGolem };
+
             ennemisForet = new Ennemi[]
             {
                 new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
@@ -57,9 +63,21 @@ namespace GrammaCast
                 new Ennemi(new Vector2(512, 116),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
                 new Ennemi(new Vector2(336, 48),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma}
             };
+
+            villageois = new Villageois[]
+            {
+                new Villageois(new Vector2(256, 192),"villagerSprite.sf") { map = mapVillage[0], perso = heroMage},
+                new Villageois(new Vector2(448, 176),"villager2Sprite.sf") { map = mapVillage[1], perso = heroMage},
+                new Villageois(new Vector2(240, 624),"villageoiseSprite.sf") { map = mapVillage[1], perso = heroMage}
+            };
+
+            dialogue = new Dialogue() { perso = heroMage, villageois = villageois[0], map = mapBoss, golem = bossGolem };
+            villageois[0].Block = true;
+
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.25f;
-            changementActif = false;
+
+            changementActif = false;  //permet d'indiquer s'il faut changer la musique
             base.Initialize();
         }
 
@@ -88,8 +106,14 @@ namespace GrammaCast
             {
                 ef.LoadContent(Content);
             }
+            foreach (Villageois v in villageois)
+            {
+                v.LoadContent(Content);
+            }
             attaqueGramma.LoadContent(Content);
             attaqueSpell.LoadContent(Content);
+            dialogue.LoadContent(Content);
+            _darken = Content.Load<Texture2D>("nouar");
             MediaPlayer.Play(songTitle);
 
             // TODO: use this.Content to load your game content here
@@ -99,7 +123,19 @@ namespace GrammaCast
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (mapVillage[indice].Actif)
+            
+            if (mapVillage[0].Actif)
+            {
+                villageois[0].Update(gameTime);
+            }
+            else if (mapVillage[1].Actif)
+            {
+                villageois[1].Update(gameTime);
+                villageois[2].Update(gameTime);
+            }
+
+            //test des transition, changement de map et updates des maps
+            if (mapVillage[indice].Actif) 
             {
                 mapVillage[indice].Update(gameTime);
                 if (heroMage.TestTransitionV(mapVillage[indice]))
@@ -128,7 +164,7 @@ namespace GrammaCast
                             mapForet.Actif = true;
                             positionHero = new Vector2(20, heroMage.PositionHero.Y);
                             heroMage.PositionHero = positionHero;
-                            changementActif = true;
+                            changementActif = true; //permet d'indiquer s'il faut changer la musique
                         }
                     }
                 }
@@ -174,18 +210,23 @@ namespace GrammaCast
                             heroMage.PositionHero = positionHero;
                         }
                     }
-                    else if (attaqueGramma.NbrPoint())
+                    if (heroMage.TestTransitionB(mapBoss[indiceB]))
                     {
-                        if (heroMage.TestTransitionB(mapBoss[indiceB]))
+                        if (attaqueGramma.NbrPoint())
                         {
                             mapBoss[indiceB].Actif = false;
                             indiceB++;
                             mapBoss[indiceB].Actif = true;
                             positionHero = new Vector2(380, 380);
                             heroMage.PositionHero = positionHero;
-                            changementActif = true;
+                            changementActif = true; //permet d'indiquer s'il faut changer la musique
                             MediaPlayer.Volume = 0.05f;
+                            heroMage.Block = true;
                         }
+                        else
+                        {
+                            heroMage.Block = true;
+                        }  
                     }
                 }
                 else
@@ -204,7 +245,8 @@ namespace GrammaCast
             if (mapBoss[1].Actif == true)
             {
                 bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-                attaqueSpell.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+                if (!bossGolem.Dead)
+                    attaqueSpell.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             }
             
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -217,13 +259,20 @@ namespace GrammaCast
             }
             if (attaqueGramma.Actif)
                 attaqueGramma.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
             if (bossGolem.hp <= 0 && !bossGolem.Dead)
             {
                 MediaPlayer.Volume -= 0.01f;
             }
-            if (changementActif)
+
+            if (changementActif)  //permet d'indiquer s'il faut changer la musique
             {
                 Musique();
+            }
+
+            if (heroMage.Block)
+            {
+                dialogue.Update(gameTime);
             }
 
             base.Update(gameTime);
@@ -233,7 +282,6 @@ namespace GrammaCast
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            //GraphicsDevice.BlendState = BlendState.AlphaBlend;
             _spriteBatch.Begin();
             if (mapVillage[indice].Actif)
                 mapVillage[indice].Draw();
@@ -255,11 +303,24 @@ namespace GrammaCast
                     e.Draw(gameTime, _spriteBatch);
                 }
             }
-                
+            if (mapVillage[0].Actif)
+            {
+                villageois[0].Draw(gameTime, _spriteBatch);
+            }
+            else if (mapVillage[1].Actif)
+            {
+                villageois[1].Draw(gameTime, _spriteBatch);
+                villageois[2].Draw(gameTime, _spriteBatch);
+            }
             if (attaqueGramma.Actif) 
                 attaqueGramma.Draw(gameTime, _spriteBatch);
             heroMage.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            
+            if (!bossGolem.Dead)
+                _spriteBatch.Draw(_darken, new Vector2(0,0), Color.White * 0.2f);
+            if (heroMage.Block)
+            {
+                dialogue.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            }
             _spriteBatch.End();
             // TODO: Add your drawing code here
 
@@ -280,7 +341,7 @@ namespace GrammaCast
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
             }
-            else if (bossGolem.Dead)
+            else if (bossGolem.Block && bossGolem.Dead)
             {
                 MediaPlayer.Play(songFinal);
                 changementActif = false;

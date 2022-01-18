@@ -9,7 +9,8 @@ namespace GrammaCast
 {
     public class Ennemi
     {
-        public static string[] ennemiSpritePath = new string[] { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", "slimeblueSprite.sf", "slimeredSprite.sf"};
+        public static string[] ennemiSpritePath = new string[] 
+        { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", "slimeblueSprite.sf", "slimeredSprite.sf"};
         public SpriteSheet[] ennemiSprite = new SpriteSheet[ennemiSpritePath.Length];
         public MapForet map;
         public Hero perso;
@@ -180,8 +181,6 @@ namespace GrammaCast
             else animation = "idle";
             return animation;
         }
-
-
         private bool EstProche()
         {
             float posX = Math.Abs(this.PositionEnnemi.X - perso.PositionHero.X);

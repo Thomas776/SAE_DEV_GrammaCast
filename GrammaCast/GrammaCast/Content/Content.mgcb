@@ -48,6 +48,12 @@
 /processorParam:TextureFormat=Color
 /build:Boss.png
 
+#begin bossMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:bossMusic.mp3
+
 #begin BossSprite.sf
 /importer:SpriteFactoryContentImporter
 /processor:SpriteFactoryContentProcessor
@@ -76,6 +82,12 @@
 /processor:TiledMapProcessor
 /build:debogmap.tmx
 
+#begin endgame.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:endgame.mp3
+
 #begin FireCast.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -100,6 +112,12 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:font.spritefont
+
+#begin forest.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:forest.mp3
 
 #begin foret.tmx
 /importer:TiledMapImporter
@@ -252,6 +270,12 @@
 /importer:TiledMapTilesetImporter
 /processor:TiledMapTilesetProcessor
 /build:LeKarma.tsx
+
+#begin menu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:menu.mp3
 
 #begin obelisk.png
 /importer:TextureImporter

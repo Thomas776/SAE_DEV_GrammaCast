@@ -19,8 +19,8 @@ namespace GrammaCast
         private string path;
         int indiceAnimation = 0;
         string animationBase = "idleSouth";
-        public int maxHP = 3;
-        public int hp = 3;
+        public int maxHP = 10;
+        public int hp = 10;
         Texture2D rectHp;
         int rect;
         public Hero(string path, Vector2 positionHero, int vitesseHero)

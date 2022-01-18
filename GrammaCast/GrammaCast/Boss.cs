@@ -31,6 +31,10 @@ namespace GrammaCast
         bool Pret;
         int x;
         int y;
+        int animationRand;
+        int vitesse = 500;
+        Vector2 positionBras;
+        public bool changementMusique;
         public Boss(string path, Vector2 positionBoss)
         {
             Path = path;
@@ -60,6 +64,7 @@ namespace GrammaCast
         {
             y = windowHeight / 3;
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float vitesseBras = deltaSeconds * vitesse;
             rect = (int)Math.Round(this.hp,0) * windowWidth / this.maxHP;
             if (map.Actif)
             {                
@@ -67,7 +72,7 @@ namespace GrammaCast
                 {
                     if (!this.Actif)
                     {
-                        this.Eveil(gameTime);
+                        this.Eveil(gameTime);                        
                     }
                     else
                     {
@@ -75,6 +80,7 @@ namespace GrammaCast
                         {
                             ProchaineAttaque(gameTime);
                             animation = "idleBoss";
+                            positionBras = new Vector2(windowWidth + 100, rand.Next(windowHeight/5,windowHeight/5*3));
                         }
                         if (this.hp <= 0)
                         {
@@ -87,25 +93,51 @@ namespace GrammaCast
                             if (timerAttaque == null)
                             {
                                 timerAttaque = new Timer(rand.Next(5, 10));
-                                x = rand.Next(windowWidth);
+                                x = rand.Next(windowWidth/4, windowWidth / 4 * 3);
+                                animationRand = rand.Next(4);
+                                switch (animationRand)
+                                {
+                                    case 0:
+                                        animation = "lightBoss"; break;
+                                    case 1:
+                                        animation = "attackArmureBoss"; break;
+                                    case 2:
+                                        animation = "lightHeadBoss"; break;
+                                    default:
+                                        animation = "attackBrasBoss"; break;
+                                }
                             }
                             else if (timerAttaque.Tick <= 2.16f)
                             {
-                                Console.WriteLine("aaaaa");
                                 this.ASLaserLaunch.Play("laserlaunch");
                             }
                             else
                             {
-                                Console.WriteLine("bbbbb");
                                 this.ASLaser.Play("laser");
                             }
-                            if (timerAttaque.AddTick(deltaSeconds) == false || this.IsCollision())
+                            if(this.IsCollision() && timerAttaque.Tick > 3)
                             {
-                                Console.WriteLine("FINI");
+                                hero.hp -= 1;
                                 timerAttaque = null;
                                 timerRepos = null;
                                 this.Pret = false;
-                            }                                                   
+                            }
+                            else if (timerAttaque.AddTick(deltaSeconds) == false)
+                            {
+                                timerAttaque = null;
+                                timerRepos = null;
+                                this.Pret = false;
+                            }
+                            if (positionBras.X > 0)
+                            {
+                                positionBras.X -= vitesseBras;
+                            }
+                            else
+                            {
+                                positionBras.X = windowWidth + 100;
+                                positionBras.Y = rand.Next(windowHeight / 5, windowHeight / 5 * 3);
+                            }                          
+                            this.ASArm.Play("glowing");
                         }
                     }                                     
                 }
@@ -113,6 +145,7 @@ namespace GrammaCast
                 {
                     animation = "idleéveilBoss";
                     this.Actif = false;
+                    changementMusique = true;
                 }
                 this.ASBoss.Play(animation);
             }                
@@ -127,12 +160,13 @@ namespace GrammaCast
             _spriteBatch.Draw(this.rectHp, new Rectangle(0,0, rect, 10), Color.Red);
             if (this.Pret)
             {
-                if (timerAttaque != null)
+                if (timerAttaque != null && this.hp > 0)
                 {
                     if (timerAttaque.Tick <= 2.16f)
                         _spriteBatch.Draw(this.ASLaserLaunch, new Vector2(x, 40));
                     else
                         _spriteBatch.Draw(this.ASLaser, new Vector2(x, y));
+                    _spriteBatch.Draw(this.ASArm, positionBras);
                 }                
             }
         }
@@ -198,11 +232,10 @@ namespace GrammaCast
             {
                 if (timerRepos == null || timerRepos.AddTick(deltaSeconds) == false)
                 {
-                    timerRepos = new Timer(rand.Next(5, 15));
+                    timerRepos = new Timer(rand.Next(2, 10));
                 }
                 else if (timerRepos.AddTick(deltaSeconds) == false)
                 {
-                    Console.WriteLine("LANCE");
                     this.Pret = true;
                 }
             }
@@ -210,10 +243,10 @@ namespace GrammaCast
         public bool IsCollision()
         {
             Rectangle rectlaser = new Rectangle(x, y, this.ASLaser.TextureRegion.Width, this.ASLaser.TextureRegion.Height);
+            Rectangle rectarm = new Rectangle((int)positionBras.X, (int)positionBras.Y, this.ASArm.TextureRegion.Width, this.ASArm.TextureRegion.Height);
             Rectangle rectHero = new Rectangle((int)hero.PositionHero.X, (int)hero.PositionHero.Y, hero.ASHero.TextureRegion.Width, hero.ASHero.TextureRegion.Height);
-            if (rectlaser.Contains(rectHero))
+            if (rectlaser.Contains(rectHero) || rectarm.Contains(rectHero))
             {
-                hero.hp -= 1;
 
                 return true;
             }

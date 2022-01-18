@@ -79,7 +79,6 @@ namespace GrammaCast
                 if (timerAnimation.AddTick(deltaSeconds) == false)
                 {
                     sommePoint += point / timerAttaque.Tick;
-                    Console.WriteLine($"{sommePoint}, {timerAttaque.Tick}");
                     timerAttaque = null;
                     this.Final = false;
                     this.Animation = false;
@@ -151,7 +150,6 @@ namespace GrammaCast
         }
         public void GetLetter()
         {
-            //Console.WriteLine("aaaa");
             var keyboardState = Keyboard.GetState();
             var keys = keyboardState.GetPressedKeys();
             foreach (var key in keys)

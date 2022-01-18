@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using System;
+
 
 namespace GrammaCast
 {
@@ -278,7 +278,6 @@ namespace GrammaCast
 
             if (changementActif)  //permet d'indiquer s'il faut changer la musique
             {
-                Console.WriteLine("ok");
                 Musique();
             }
 
@@ -340,7 +339,6 @@ namespace GrammaCast
         }
         public void Musique()
         {
-            Console.WriteLine("bb");
             if ((mapForet.Actif || mapBoss[0].Actif) && !bossGolem.Dead)
             {
                 MediaPlayer.Play(songForest);
@@ -356,7 +354,6 @@ namespace GrammaCast
             
             else if (bossGolem.Dead && !bossGolem.Actif)
             {
-                Console.WriteLine("ICI");
                 MediaPlayer.Play(songFinal);
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
@@ -368,7 +365,6 @@ namespace GrammaCast
                 changementActif = false;
                 MediaPlayer.Volume = 0.25f;
             }
-            Console.WriteLine($"{bossGolem.Dead}, !{bossGolem.Actif}");
         }
     }
 }

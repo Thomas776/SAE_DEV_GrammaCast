@@ -135,7 +135,6 @@ namespace GrammaCast
         }
         public void GetLetter(char lettre)
         {
-            //Console.WriteLine("aaaa");
             string letter = lettre.ToString();
             var keyboardState = Keyboard.GetState();
             var keys = keyboardState.GetPressedKeys();

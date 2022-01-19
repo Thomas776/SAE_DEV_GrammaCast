@@ -15,7 +15,9 @@ namespace GrammaCast
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
         public SpriteBatch SpriteBatch { get; set; }
+
         public Vector2 positionHero;
+
         Hero heroMage;
         MapForet mapForet;
         MapVillage[] mapVillage;
@@ -23,18 +25,25 @@ namespace GrammaCast
         Boss bossGolem;
         Ennemi[] ennemisForet;
         Villageois[] villageois;
+
         public Attaque attaqueGramma;
         public AttaqueBoss attaqueSpell;
-        int indice = 0;
-        int indiceB = 0;
+
+        //indice des tableaux de map pour les transitions 
+        int indice = 0; //village
+        int indiceB = 0; //boss
+
         private Song songTitle;
         private Song songForest;
         private Song songBoss;
         private Song songFinal;
+
         public bool changementActif; //permet d'indiquer s'il faut changer la musique
-        Texture2D _darken;
+        Texture2D _darken; //filtre noir au début de la partie qui disparait quand le boss meurt
+
         Dialogue dialogue;
-        string songActuel = "s";
+
+        string songActuel = "s"; //permet de charger le dernier song
 
         public Game1()
         {
@@ -82,11 +91,12 @@ namespace GrammaCast
                 new Villageois(new Vector2(240, 624),"villageoiseSprite.sf") { map = mapVillage[1], perso = heroMage}
             };
 
+            //les dialogue
             dialogue = new Dialogue() { perso = heroMage, villageois = villageois[0], map = mapBoss, golem = bossGolem};
-            villageois[0].Block = true;
+            villageois[0].Block = true; //permet de lancer le dialogue dès le départ quand le joueur va se rapprocher
 
-            MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = 0.25f;
+            MediaPlayer.IsRepeating = true; //pour éviter qu'elle se coupe
+            MediaPlayer.Volume = 0.25f; //sinon la musiques est trop forte
 
             changementActif = false;  //permet d'indiquer s'il faut changer la musique
             base.Initialize(); // On initialise Game (le parent)
@@ -96,36 +106,48 @@ namespace GrammaCast
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
             songTitle = Content.Load<Song>("menu");
             songForest = Content.Load<Song>("forest");
             songBoss = Content.Load<Song>("bossMusic");
             songFinal = Content.Load<Song>("endgame");
+
             foreach (MapVillage v in mapVillage)
             {
                 v.LoadContent(Content, GraphicsDevice);
             }
+
             foreach (MapBoss b in mapBoss)
             {
                 b.LoadContent(Content, GraphicsDevice);
             }
+
             mapForet.LoadContent(Content, GraphicsDevice);
+
             _graphics.PreferredBackBufferWidth = mapForet.TileMap.Height * mapForet.TileMap.TileHeight;
             _graphics.PreferredBackBufferHeight = mapForet.TileMap.Width * mapForet.TileMap.TileWidth;
             _graphics.ApplyChanges();
+
             heroMage.LoadContent(Content, GraphicsDevice);
-            bossGolem.LoadContent(Content, GraphicsDevice);            
+            bossGolem.LoadContent(Content, GraphicsDevice);  
+            
             foreach (Ennemi ef in ennemisForet)
             {
                 ef.LoadContent(Content);
             }
+
             foreach (Villageois v in villageois)
             {
                 v.LoadContent(Content);
             }
+
             attaqueGramma.LoadContent(Content);
             attaqueSpell.LoadContent(Content);
+
             dialogue.LoadContent(Content);
-            _darken = Content.Load<Texture2D>("nouar");
+
+            _darken = Content.Load<Texture2D>("nouar"); //filtre noir au début de la partie qui disparait quand le boss meurt
+
             MediaPlayer.Play(songTitle);
         }
 
@@ -147,48 +169,53 @@ namespace GrammaCast
             }
 
             //transition, changement de map et updates des maps
-            if (mapVillage[indice].Actif) 
+            if (mapVillage[indice].Actif) //si map village
             {
-                mapVillage[indice].Update(gameTime);
-                if (heroMage.TestTransitionV(mapVillage[indice]))
+                mapVillage[indice].Update(gameTime); //update village
+                if (heroMage.TestTransitionV(mapVillage[indice])) //si y'a une transition
                 {
-                    if (indice == 0)
+                    if (indice == 0) //première map
                     {
-                        mapVillage[indice].Actif = false;
-                        indice++;
-                        mapVillage[indice].Actif = true;
-                        positionHero = new Vector2(20, heroMage.PositionHero.Y);
+                        mapVillage[indice].Actif = false; //map actuel
+                        indice++;                           //changement map
+                        mapVillage[indice].Actif = true; //map suivante
+                        positionHero = new Vector2(20, heroMage.PositionHero.Y); //nouvelle position joueur
                         heroMage.PositionHero = positionHero;
                     }
                     else
                     {
-                        if (heroMage.PositionHero.X < GraphicsDevice.Viewport.Width / 2)
+                        if (heroMage.PositionHero.X < GraphicsDevice.Viewport.Width / 2) //pour la 2e map il y a 2 transitions dont test de
+                                                                               //ou se situe le perso
+                                                                               //donc si le perso se trouve dans la partie gauche de la map
                         {
-                            mapVillage[indice].Actif = false;
-                            indice--;
-                            mapVillage[indice].Actif = true;
-                            positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
+                            mapVillage[indice].Actif = false;//map actuel
+                            indice--;                           //changement map (ici toujours village)
+                            mapVillage[indice].Actif = true;//map suivante
+                            positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y); //changement position perso
                             heroMage.PositionHero = positionHero;
                         }
-                        else
+                        else //sinon le perso est dans la partie droite donc changer vers le foret
                         {
-                            mapVillage[indice].Actif = false;
-                            mapForet.Actif = true;
+                            mapVillage[indice].Actif = false; //map village
+                            mapForet.Actif = true; //foret
+                            //l'indice ne change pas pour revenir via la foret au village
+
                             positionHero = new Vector2(20, heroMage.PositionHero.Y);
                             heroMage.PositionHero = positionHero;
-                            if (!bossGolem.Dead)
+                            if (!bossGolem.Dead) 
                                 changementActif = true; //permet d'indiquer s'il faut changer la musique
                         }
                     }
                 }
             }
-            else if (mapForet.Actif)
+            else if (mapForet.Actif) //si la foret est active
             {
                 mapForet.Update(gameTime);
-                if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 2)
+                if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 2) //si le perso se trouve en la partie inférieure
                 {
                     if (heroMage.TestTransitionF(mapForet))
                     {
+                        //retour sur la map village
                         mapVillage[indice].Actif = true;
                         mapForet.Actif = false;
                         positionHero = new Vector2(GraphicsDevice.Viewport.Width - 20, heroMage.PositionHero.Y);
@@ -199,6 +226,7 @@ namespace GrammaCast
                 }
                 else
                 {
+                    //passage vers la map de la tour
                     if (heroMage.TestTransitionF(mapForet))
                     {
                         mapBoss[indiceB].Actif = true;
@@ -209,15 +237,16 @@ namespace GrammaCast
                 }
 
             }
-            else if (mapBoss[indiceB].Actif)
+            else if (mapBoss[indiceB].Actif) //map boss
             {
                 mapBoss[indiceB].Update(gameTime);
-                if(indiceB == 0)
+                if(indiceB == 0) //si map tour
                 {
-                    if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 4 * 3)
+                    if (heroMage.PositionHero.Y > GraphicsDevice.Viewport.Height / 4 * 3) //si le joueur se trouve tout en bas de la map
                     {
                         if (heroMage.TestTransitionB(mapBoss[indiceB]))
                         {
+                            //retour foret
                             mapForet.Actif = true;
                             mapBoss[indiceB].Actif = false;
                             positionHero = new Vector2(heroMage.PositionHero.X, 20);
@@ -226,35 +255,41 @@ namespace GrammaCast
                     }
                     if (heroMage.TestTransitionB(mapBoss[indiceB]))
                     {
+                        //sinon test pour savoir si le perso peut aller combattre le boss
                         if (bossGolem.Dead)
                         {
-
+                            //ne peut pas y retourner
                         }
                         else if (attaqueGramma.NbrPoint())
                         {
+                            //si le perso a assez de point (3000)
+
                             mapBoss[indiceB].Actif = false;
                             indiceB++;
                             mapBoss[indiceB].Actif = true;
                             positionHero = new Vector2(380, 380);
                             heroMage.PositionHero = positionHero;
+
                             if (!bossGolem.Dead)
                                 changementActif = true; //permet d'indiquer s'il faut changer la musique
-                            MediaPlayer.Volume = 0.05f;
-                            heroMage.Block = true;
+
+                            MediaPlayer.Volume = 0.05f; //baisse la musique
+                            heroMage.Block = true; //pour activer le dilaogue
                         }
                         else if (!bossGolem.Dead)
                         {
-                            heroMage.Block = true;
+                            heroMage.Block = true; //sinon il ne peut pas aller dans la tour
                         }  
                     }
                 }
                 else
                 {
-                    if (heroMage.TestTransitionB(mapBoss[indiceB]) && bossGolem.Dead)
+                    if (heroMage.TestTransitionB(mapBoss[indiceB]) && bossGolem.Dead) //ne peut sortir que si le boss est mort
                     {
                         mapBoss[indiceB].Actif = false;
                         indiceB--;
                         mapBoss[indiceB].Actif = true;
+
                         positionHero = new Vector2(376, 464);
                         heroMage.PositionHero = positionHero;
                     }
@@ -266,22 +301,24 @@ namespace GrammaCast
                 bossGolem.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                 if (!bossGolem.Dead)
                     attaqueSpell.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-                else if (songActuel != "songFinal")
+
+                else if (songActuel != "songFinal") //change la musique
                     changementActif = true;
             }
             
             heroMage.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            if (mapForet.Actif && !bossGolem.Dead)
+            if (mapForet.Actif && !bossGolem.Dead) //fait apparaitre les ennemis que si le boss est actif et que le perso est dans la foret
             {
                 foreach (Ennemi ef in ennemisForet)
                 {
                     ef.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
                 }
             }
+
             if (attaqueGramma.Actif)
                 attaqueGramma.Update(gameTime, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
-            if (bossGolem.hp <= 0 && !bossGolem.Dead)
+            if (bossGolem.hp <= 0 && !bossGolem.Dead) //ne fonctionne pas, pas eu le temps de vérfier
             {
                 MediaPlayer.Volume -= 0.01f;
             }
@@ -304,13 +341,16 @@ namespace GrammaCast
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             _spriteBatch.Begin();
+
             if (mapVillage[indice].Actif)
                 mapVillage[indice].Draw();
             else if (mapForet.Actif) 
                 mapForet.Draw();
             else if (mapBoss[indiceB].Actif)
                 mapBoss[indiceB].Draw();
+
             if (mapBoss[1].Actif == true)
             {
                 bossGolem.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -325,6 +365,7 @@ namespace GrammaCast
                     e.Draw(gameTime, _spriteBatch);
                 }
             }
+
             if (mapVillage[0].Actif)
             {
                 villageois[0].Draw(gameTime, _spriteBatch);
@@ -334,21 +375,27 @@ namespace GrammaCast
                 villageois[1].Draw(gameTime, _spriteBatch);
                 villageois[2].Draw(gameTime, _spriteBatch);
             }
+
             if (attaqueGramma.Actif) 
                 attaqueGramma.Draw(gameTime, _spriteBatch);
+
             heroMage.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
             if (!bossGolem.Dead)
                 _spriteBatch.Draw(_darken, new Vector2(0,0), Color.White * 0.2f);
+
             if (heroMage.Block)
             {
                 dialogue.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             }
+
             _spriteBatch.End();
             
             base.Draw(gameTime);
         }
         public void Musique()
         {
+            //permet de changer la musique selon la situations
             if ((mapForet.Actif || mapBoss[0].Actif) && !bossGolem.Dead)
             {
                 MediaPlayer.Play(songForest);

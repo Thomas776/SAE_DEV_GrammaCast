@@ -13,8 +13,6 @@ namespace GrammaCast
     en utilisant la classe Attaque (donc lettre par lettre) */
     public class AttaqueBoss
     { 
-        /* Représente une attaque du boss. Une attaque est composée d'un mot à écrire,
-        en utilisant la classe Attaque (donc lettre par lettre) */
         public static string[] spriteChemin = new string[] { "IceCastSprite.sf",
             "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "PoisonCastSprite.sf"};
         private string[] spell = new string[] { "FEUGLACIAL", "FEUENSORCELE", "EXPLOSIONDIVINE", "ECLATDEGLACE", "BRULUREDEPOISON" };
@@ -157,14 +155,7 @@ namespace GrammaCast
 
                 }
             }
-        }
-        public bool NbrHP()
-        {
-            if (golem.hp >= 500)
-                return true;
-            else
-                return false;
-        }
+        }      
         public void ProchaineAttaque(GameTime gt)
         {
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;

@@ -106,6 +106,7 @@ namespace GrammaCast
                                 ProchaineAttaque(gameTime);
                                 animation = "idleBoss";
                                 positionBras = new Vector2(windowWidth + 100, rand.Next(windowHeight / 5, windowHeight / 5 * 3));
+                                //position aléatoire du bras
                             }
                             if (this.hp <= 0)
                             {
@@ -113,15 +114,15 @@ namespace GrammaCast
                                 animation = "deathoreveilBoss";
                                 timerDeath = new Timer(2.8f);
                                 
-                                hero.Block = true;
+                                hero.Block = true; //bloque le perso pour activer le dialogue
                             }
                             if (this.Pret)
                             {
                                 if (timerAttaque == null)
                                 {
                                     timerAttaque = new Timer(rand.Next(5, 10));
-                                    x = rand.Next(windowWidth / 4, windowWidth / 4 * 3);
-                                    animationRand = rand.Next(4);
+                                    x = rand.Next(windowWidth / 4, windowWidth / 4 * 3); //x aléatoire de la position du laser
+                                    animationRand = rand.Next(4); //animation aléatoire quand une attaque se lance
                                     switch (animationRand)
                                     {
                                         case 0:
@@ -134,44 +135,44 @@ namespace GrammaCast
                                             animation = "attackBrasBoss"; break;
                                     }
                                 }
-                                else if (timerAttaque.Tick <= 2.16f)
+                                else if (timerAttaque.Tick <= 2.16f) // pour laisser apparaître le sprite sinon il ne s'affiche pas
                                 {
                                     this.ASLaserLaunch.Play("laserlaunch");
                                 }
-                                else
+                                else // à la fin du launch le laser se lance
                                 {
                                     this.ASLaser.Play("laser");
                                 }
-                                if (this.IsCollision() && timerAttaque.Tick > 3)
+                                if (this.IsCollision() && timerAttaque.Tick > 2.16f) //test s'il y a une colision et arrête l'attaque, à revoir
                                 {
                                     hero.hp -= 1;
                                     timerAttaque = null;
                                     timerRepos = null;
                                     this.Pret = false;
                                 }
-                                else if (timerAttaque.AddTick(deltaSeconds) == false)
+                                else if (timerAttaque.AddTick(deltaSeconds) == false) //sinon arrête l'attaque quand le timer est fini
                                 {
                                     timerAttaque = null;
                                     timerRepos = null;
                                     this.Pret = false;
                                 }
-                                if (positionBras.X > 0)
+                                if (positionBras.X > 0) //permet de deplacer le bras
                                 {
                                     positionBras.X -= vitesseBras;
                                 }
-                                else
+                                else //replace le bras quand il a ateint le bord de la fenetre
                                 {
                                     positionBras.X = windowWidth + 100;
-                                    positionBras.Y = rand.Next(windowHeight / 5, windowHeight / 5 * 3);
+                                    positionBras.Y = rand.Next(windowHeight / 5, windowHeight / 5 * 3); //position aléatoire
                                 }
-                                this.ASArm.Play("glowing");
+                                this.ASArm.Play("glowing"); //ne fonctionne pas, pas eu le temps de voir pourquoi
                             }
                         }
                         
                     }
                                                       
                 }
-                else if (timerDeath.AddTick(deltaSeconds) == false)
+                else if (timerDeath.AddTick(deltaSeconds) == false) //pour laisser l'animation se faire sinon il n'y a que la 1ere frame
                 {
                     this.Dead = true;
                     this.Block = false;
@@ -190,9 +191,9 @@ namespace GrammaCast
             
             _spriteBatch.Draw(this.ASBoss, this.PositionBoss);
             _spriteBatch.Draw(this.rectHp, new Rectangle(0,0, rect, 10), Color.Red);
-            if (this.Pret)
+            if (this.Pret) //si l'attaque peut se lancer
             {
-                if (timerAttaque != null && this.hp > 0)
+                if (timerAttaque != null && this.hp > 0) //a condition que le boss soit vivant et que l'attaque est toujorus en cours
                 {
                     if (timerAttaque.Tick <= 2.16f)
                         _spriteBatch.Draw(this.ASLaserLaunch, new Vector2(x, 40));
@@ -230,9 +231,10 @@ namespace GrammaCast
             private set => asArm = value;
         }
         public Vector2 PositionBoss;
-        public bool Block;
+        public bool Block; //permet de déclencher ou non des dialogues
         public bool Eveil(GameTime gt)
         {
+            //permet d'activer le boss au début du combat
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;
             if (timerEveil == null)
             {
@@ -248,7 +250,7 @@ namespace GrammaCast
                 }
                 else
                 {
-                    if (timerEveil.Tick >= 5.25f)
+                    if (timerEveil.Tick >= 5.25f) //le temps de l'animation
                     {
                         animation = "eveilBoss";
                         
@@ -260,6 +262,7 @@ namespace GrammaCast
         }
         public void ProchaineAttaque(GameTime gt)
         {
+            //permet de faire une pause entre chaque attaque
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;
             if (this.Actif)
             {
@@ -275,12 +278,15 @@ namespace GrammaCast
         }
         public bool IsCollision()
         {
+            //verifie s'il y a une collision entre les attaques du boss et le perso
+            //méthode à revoir car assez broken, pas trop eu le temps de travailler à fond dessus
+
             Rectangle rectlaser = new Rectangle(x, y, this.ASLaser.TextureRegion.Width, this.ASLaser.TextureRegion.Height);
             Rectangle rectarm = new Rectangle((int)positionBras.X, (int)positionBras.Y, this.ASArm.TextureRegion.Width, this.ASArm.TextureRegion.Height);
             Rectangle rectHero = new Rectangle((int)hero.PositionHero.X, (int)hero.PositionHero.Y, hero.ASHero.TextureRegion.Width, hero.ASHero.TextureRegion.Height);
+            
             if (rectlaser.Contains(rectHero) || rectarm.Contains(rectHero))
             {
-
                 return true;
             }
                 

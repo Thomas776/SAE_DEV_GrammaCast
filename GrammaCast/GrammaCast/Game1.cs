@@ -6,6 +6,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace GrammaCast
 {
+    /*
+    Classe du jeu.
+    La classe s'appelle "Game1" pour ne pas la confondre avec son parent Game (venant de MonoGame)
+    */
     public class Game1 : Game
     {
         public GraphicsDeviceManager _graphics;
@@ -42,22 +46,26 @@ namespace GrammaCast
         protected override void Initialize()
         {
 
+            // On charge les différentes maps
             mapForet = new MapForet("foret");
             mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
-            mapVillage[0].Actif = true;
+            mapVillage[0].Actif = true; // Map de départ
             mapBoss = new MapBoss[] { new MapBoss("ZoneDeLaTour"), new MapBoss("ZoneFinale") };
 
 
-            Vector2 positionHero = new Vector2(64, 192);
+            Vector2 positionHero = new Vector2(64, 192); // Position de départ du joueur
             
+            // ..On initialise notre joueur, et le boss..
             heroMage = new Hero("HeroSprite.sf", positionHero, 125) { mapV = mapVillage, mapF = mapForet, mapB = mapBoss };
             bossGolem = new Boss("BossSprite.sf", new Vector2(387, 65)) 
             { map = mapBoss[1], hero = heroMage};
             bossGolem.Block = true;
 
+            // ..les attaques..
             attaqueGramma = new Attaque() { perso = heroMage};
             attaqueSpell = new AttaqueBoss() {perso = heroMage, golem = bossGolem };
 
+            // ..les ennemis..
             ennemisForet = new Ennemi[]
             {
                 new Ennemi(new Vector2(112, 530),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma},
@@ -66,6 +74,7 @@ namespace GrammaCast
                 new Ennemi(new Vector2(336, 48),40) { map = mapForet, perso = heroMage, attaqueLetter = attaqueGramma}
             };
 
+            // ..et les villageois !
             villageois = new Villageois[]
             {
                 new Villageois(new Vector2(256, 192),"villagerSprite.sf") { map = mapVillage[0], perso = heroMage},
@@ -80,9 +89,10 @@ namespace GrammaCast
             MediaPlayer.Volume = 0.25f;
 
             changementActif = false;  //permet d'indiquer s'il faut changer la musique
-            base.Initialize();
+            base.Initialize(); // On initialise Game (le parent)
         }
 
+        // Après leur initialisation, on charge leurs sprites
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -117,10 +127,10 @@ namespace GrammaCast
             dialogue.LoadContent(Content);
             _darken = Content.Load<Texture2D>("nouar");
             MediaPlayer.Play(songTitle);
-
-            // TODO: use this.Content to load your game content here
         }
 
+        // Fonction appelée par la bibliothèque
+        // On s'en sert pour transmettre le signal d'update à toutes les entités/etc... du jeu
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -136,7 +146,7 @@ namespace GrammaCast
                 villageois[2].Update(gameTime);
             }
 
-            //test des transition, changement de map et updates des maps
+            //transition, changement de map et updates des maps
             if (mapVillage[indice].Actif) 
             {
                 mapVillage[indice].Update(gameTime);
@@ -290,6 +300,7 @@ namespace GrammaCast
             
         }
 
+        // Dessine les éléments du jeu
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -333,8 +344,7 @@ namespace GrammaCast
                 dialogue.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             }
             _spriteBatch.End();
-            // TODO: Add your drawing code here
-
+            
             base.Draw(gameTime);
         }
         public void Musique()

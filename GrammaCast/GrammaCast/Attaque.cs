@@ -49,7 +49,8 @@ namespace GrammaCast
             Actif = false;
             Final = false;
             Animation = false;
-            AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)]; //tirage aléatoire d'une lettre            
+            AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
+            
         }
 
         // Charge le Sprite (visuel) de l'attaque depuis le chemin donné par le constructeur
@@ -179,7 +180,7 @@ namespace GrammaCast
                 }
             }
         }
-        
+
         public bool NbrPoint()
         {
             //permet de vérifier si le personnage possède assez de point pour aller combattre le boss

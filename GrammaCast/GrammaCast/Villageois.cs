@@ -8,16 +8,31 @@ using System;
 
 namespace GrammaCast
 {
+    /*
+    Cette classe représente un villageois dans existant dans le jeu.
+    */
     public class Villageois
     {
         public MapVillage map;
         string path;
-        public SpriteSheet villageoisSprite;
+        public SpriteSheet villageoisSprite; // Stocke les sprites associés au villageois
         public Hero perso;
         private int vitesseVillageois;
-        private AnimatedSprite asVillageois;
-        public Timer timerDeplacement;
+        private AnimatedSprite asVillageois; // Gère les animations via les sprites définis précédement
+        public Timer timerDeplacement; // Temps restant avant de changer d'animation
+        
+        /*Animation à produire pour le villageois
+        Valeurs possibles : idle, walkNorth, walkSouth, walkEast, walkWest*/
         public string animation = "idle";
+
+        /* Représente le type de déplacement voulu pour le villageois
+        Valeurs possibles :
+        1 : déplacement en Y+ : Sud
+        2 : déplacement en X+ : Est
+        3 : déplacement en Y- : Nord
+        4 : déplacement en X- : Ouest
+        n'importe quelle autre valeur : aucun déplacement
+        */
         int indice = 0;
 
 
@@ -31,11 +46,14 @@ namespace GrammaCast
             Block = false;
         }
 
+// Charge le Sprite (visuel) du villageois depuis le chemin donné par le constructeur
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             this.VillageoisSprite = Content.Load<SpriteSheet>(this.Path, new JsonContentLoader());
             this.ASVillageois = new AnimatedSprite(this.VillageoisSprite);
         }
+
+        // Met à jour le villageois
         public void Update(GameTime gameTime)
         {
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -85,7 +103,13 @@ namespace GrammaCast
             get => vitesseVillageois;
             private set => vitesseVillageois = value;
         }
+        
+        /* Permet de bloquer le déplacement du villageois
+        cet attribut est actuellement utilisé pour bloquer le villageois s'il est proche du joueur,
+        afin de commencer un dialogue (le joueur à un attribut similaire)*/
         public bool Block;
+
+        // Gère le déplacement du villageois et renvoi l'animation à lui donner pour ce déplacement
         private string Deplacement(GameTime gameTime)
         {
             string animation;
@@ -101,6 +125,8 @@ namespace GrammaCast
                 indice = rand.Next(1, 5);
                 timerDeplacement = new Timer(timeMax);
             }
+
+            // On regarde le déplacement voulu
             switch (indice)
             {
                 case 1:
@@ -119,6 +145,7 @@ namespace GrammaCast
                     break;
             }
 
+            // On détermine l'animation associée à ce déplacement
             if (deplacement.X == 0 && deplacement.Y == -2)
             {
                 ushort tx = (ushort)(this.PositionVillageois.X / map.TileMap.TileWidth);
@@ -171,6 +198,8 @@ namespace GrammaCast
             else animation = "idle";
             return animation;
         }
+
+        // Retourne true si le villagois est proche du joueur
         private bool EstProche()
         {
             float posX = Math.Abs(this.PositionVillageois.X - perso.PositionHero.X);

@@ -9,10 +9,16 @@ using System;
 
 namespace GrammaCast
 {
+    /*
+    Attaque (lettre) demandée pour tuer un ennemi
+    */
     public class Attaque
     {
+        // Chemins des sprites des animations possibles à fiare
         public static string[] spriteChemin = new string[] { "IceCastSprite.sf",
             "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "PoisonCastSprite.sf"};
+        
+        // Lettres d'attaque possibles
         private string[] alphabet = new string[] { "A", "B", "C", "D", "E", "F", "G",
             "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
         private SpriteSheet[] attaqueSprite = new SpriteSheet[spriteChemin.Length];
@@ -41,6 +47,8 @@ namespace GrammaCast
             AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
             
         }
+
+        // Charge le Sprite (visuel) de l'attaque depuis le chemin donné par le constructeur
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             this.AttaqueFont = Content.Load<SpriteFont>(this.FontPath);
@@ -162,6 +170,7 @@ namespace GrammaCast
                 }
             }
         }
+        
         public bool NbrPoint()
         {
             if (sommePoint >= 3000)

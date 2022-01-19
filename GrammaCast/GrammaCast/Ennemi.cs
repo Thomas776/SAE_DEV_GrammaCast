@@ -7,14 +7,23 @@ using System;
 
 namespace GrammaCast
 {
+   
+    /*
+    Cette classe représente un ennemi dans existant dans le jeu.
+    */
     public class Ennemi
     {
+        
+
+        // Liste des chemins des sprites possibles pour les ennemis
         public static string[] ennemiSpritePath = new string[] 
         { "batSprite.sf", "snakeSprite.sf", "slimeSprite.sf", "slimeOrangeSprite.sf", "slimeblueSprite.sf", "slimeredSprite.sf"};
+        
+        // Sprites concrets des chemins définis plus haut
         public SpriteSheet[] ennemiSprite = new SpriteSheet[ennemiSpritePath.Length];
         public MapForet map;
         public Hero perso;
-        public Attaque attaqueLetter;
+        public Attaque attaqueLetter; // Lettre demandée afin de tuer l'ennemi
         private int vitesseEnnemi;
         private AnimatedSprite asEnnemi;
         public Timer timerDeplacement;
@@ -31,6 +40,8 @@ namespace GrammaCast
             Actif = true;
         }
 
+
+        // Charge le Sprite (visuel) de l'ennemi depuis le chemin donné par le constructeur
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content)
         {
             for(int i = 0; i < ennemiSprite.Length; i ++)
@@ -39,6 +50,8 @@ namespace GrammaCast
             }            
             this.ASEnnemi = new AnimatedSprite(ennemiSprite[rand.Next(ennemiSprite.Length)]);
         }
+
+        // Met à jour le villageois
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -108,7 +121,12 @@ namespace GrammaCast
             private set => vitesseEnnemi = value;
         }
         public bool Actif;
+
+        /* Permet de bloquer le déplacement de l'ennemi
+        cet attribut est actuellement utilisé pour bloquer l'ennemi s'il est proche du joueur*/
         public bool Block;
+
+        // Gère le déplacement du villageois et renvoi l'animation à lui donner pour ce déplacement
         private string Deplacement(GameTime gameTime)
         {
             string animation;
@@ -181,6 +199,9 @@ namespace GrammaCast
             else animation = "idle";
             return animation;
         }
+
+
+        // Retourne true si le l'ennemi est proche du joueur
         private bool EstProche()
         {
             float posX = Math.Abs(this.PositionEnnemi.X - perso.PositionHero.X);

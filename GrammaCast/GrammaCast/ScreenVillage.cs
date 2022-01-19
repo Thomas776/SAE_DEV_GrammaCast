@@ -82,7 +82,7 @@ namespace GrammaCast
             private set => tileMapLayerObstacles2 = value;
         }
         public bool Actif;
-        public bool IsCollisionHero(ushort x, ushort y)
+        public bool IsCollisionHero(ushort x, ushort y)//check les collisions avec les obstacles
         {
             TiledMapTile? tile;
             if (this.TileMapLayerRebords.TryGetTile(x, y, out tile) == false)
@@ -99,7 +99,7 @@ namespace GrammaCast
                 return true;
             return false;
         }
-        public bool IsTransition(ushort x, ushort y)
+        public bool IsTransition(ushort x, ushort y)//permet de vérifier si le joueur peut faire une transition d'une map à l'autre
         {
             TiledMapTile? tile;
             if (this.TileMapLayerTransition.TryGetTile(x, y, out tile) == false)
@@ -108,7 +108,7 @@ namespace GrammaCast
                 return true;
             return false;
         }
-        public bool IsCollisionZone(ushort x, ushort y)
+        public bool IsCollisionZone(ushort x, ushort y)//permet de faire en sorte que le villageois se déplace dans une zone sans la quitter 
         {
             TiledMapTile? tile;
             if (this.TileMapLayerZone.TryGetTile(x, y, out tile) == false)

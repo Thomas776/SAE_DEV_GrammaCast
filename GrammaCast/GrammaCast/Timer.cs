@@ -3,6 +3,7 @@ namespace GrammaCast
 {
     public class Timer
     {
+        //permet d'instancier un timer
         private float tick;
         private float maxTick;
 

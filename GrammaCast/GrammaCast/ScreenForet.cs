@@ -7,10 +7,10 @@ namespace GrammaCast
 {
     public class MapForet
     {
+        
         private TiledMap tileMap;
         private TiledMapRenderer tileMapRenderer;
         private TiledMapTileLayer tileMapLayerZone;
-        private TiledMapTileLayer tileMapLayerRebords;
         private TiledMapTileLayer tileMapLayerTransition;
         private TiledMapTileLayer tileMapLayerObstacles;
         private TiledMapTileLayer tileMapLayerObstacles2;
@@ -27,8 +27,9 @@ namespace GrammaCast
         {
             this.TileMap = Content.Load<TiledMap>(this.Path);
             this.TileMapRenderer = new TiledMapRenderer(gd, this.TileMap);
+
+            //les différents calques d'obstacles ou utiles pour d'autres méthodes
             this.TileMapLayerZone = this.TileMap.GetLayer<TiledMapTileLayer>("zone");
-            this.TileMapLayerRebords = this.TileMap.GetLayer<TiledMapTileLayer>("rebords");
             this.TileMapLayerTransition = this.TileMap.GetLayer<TiledMapTileLayer>("transition");
             this.TileMapLayerObstacles = this.TileMap.GetLayer<TiledMapTileLayer>("obstacles");
             this.TileMapLayerObstacles2 = this.TileMap.GetLayer<TiledMapTileLayer>("obstacles2");
@@ -63,11 +64,6 @@ namespace GrammaCast
             get => tileMapLayerZone;
             private set => tileMapLayerZone = value;
         }
-        public TiledMapTileLayer TileMapLayerRebords
-        {
-            get => tileMapLayerRebords;
-            private set => tileMapLayerRebords = value;
-        }
         public TiledMapTileLayer TileMapLayerTransition
         {
             get => tileMapLayerTransition;
@@ -84,7 +80,7 @@ namespace GrammaCast
             private set => tileMapLayerObstacles2 = value;
         }
         public bool Actif;
-        public bool IsCollisionZone(Hero perso)
+        public bool IsCollisionZone(Hero perso) //si le perso est dans la zone, il pourra être bloqué pour enclencher un combat entre un ennemi et lui
         {
             TiledMapTile? tile;
             if (this.TileMapLayerZone.TryGetTile((ushort)perso.PositionHero.X, (ushort)perso.PositionHero.Y, out tile) == false)
@@ -93,7 +89,8 @@ namespace GrammaCast
                 return true;
             return false;
         }
-        public bool IsCollisionEnnemi(ushort x, ushort y)
+        public bool IsCollisionEnnemi(ushort x, ushort y) //permet de faire en sorte que l'ennemi se déplace dans une zone sans la quitter 
+                                                          //permet aussi de lancer un combat si le perso est dans cette zone
         {
             TiledMapTile? tile;
             if (this.TileMapLayerZone.TryGetTile(x, y, out tile) == false)
@@ -102,13 +99,9 @@ namespace GrammaCast
                 return true;
             return false;
         }
-        public bool IsCollisionHero(ushort x, ushort y)
+        public bool IsCollisionHero(ushort x, ushort y) //check les collisions avec les obstacles
         {
             TiledMapTile? tile;
-            if (this.TileMapLayerRebords.TryGetTile(x, y, out tile) == false)
-                return true;
-            if (!tile.Value.IsBlank)
-                return true;
             if (this.TileMapLayerObstacles.TryGetTile(x, y, out tile) == false)
                 return true;
             if (!tile.Value.IsBlank)
@@ -119,7 +112,7 @@ namespace GrammaCast
                 return true;
             return false;
         }
-        public bool IsTransition(ushort x, ushort y)
+        public bool IsTransition(ushort x, ushort y) //permet de vérifier si le joueur peut faire une transition d'une map à l'autre
         {
             TiledMapTile? tile;
             if (this.TileMapLayerTransition.TryGetTile(x, y, out tile) == false)

@@ -263,11 +263,6 @@
 /processorParam:Quality=Best
 /build:forest.mp3
 
-#begin foret.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:foret.tmx
-
 #begin glowingarm1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -493,6 +488,11 @@
 /processor:SpriteFactoryContentProcessor
 /processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
 /build:rayonmagiqueSprite.sf
+
+#begin Rebuild.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Rebuild.tmx
 
 #begin slime_spritesheet.png
 /importer:TextureImporter

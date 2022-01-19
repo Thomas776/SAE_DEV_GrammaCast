@@ -56,7 +56,7 @@ namespace GrammaCast
         {
 
             // On charge les différentes maps
-            mapForet = new MapForet("foret");
+            mapForet = new MapForet("ReBuild");
             mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
             mapVillage[0].Actif = true; // Map de départ
             mapBoss = new MapBoss[] { new MapBoss("ZoneDeLaTour"), new MapBoss("ZoneFinale") };
@@ -382,7 +382,7 @@ namespace GrammaCast
             heroMage.Draw(gameTime, _spriteBatch, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             if (!bossGolem.Dead)
-                _spriteBatch.Draw(_darken, new Vector2(0,0), Color.White * 0.2f);
+                _spriteBatch.Draw(_darken, new Vector2(0,0), Color.White * 0.25f);
 
             if (heroMage.Block)
             {

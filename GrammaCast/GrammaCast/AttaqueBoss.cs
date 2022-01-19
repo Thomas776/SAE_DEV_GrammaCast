@@ -17,6 +17,7 @@ namespace GrammaCast
             "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "PoisonCastSprite.sf"};
         private string[] spell = new string[] { "FEUGLACIAL", "FEUENSORCELE", "EXPLOSIONDIVINE", "ECLATDEGLACE", "BRULUREDEPOISON" };
         private SpriteSheet[] attaqueSprite = new SpriteSheet[spriteChemin.Length];
+
         public Hero perso;
         public Boss golem;
         private string fontPath;
@@ -29,10 +30,12 @@ namespace GrammaCast
         Timer timerAttaque;
         Timer timerProchaine;
         Random rand = new Random();
-        public float point = 4000;
+        public float point = 4000; //point que fait de base une attaque
+
+
         int attack;
         public int indiceAttack = 0;
-        char[] spellcast;
+        char[] spellcast; //permet de décomposer le mot en lettre
 
         public AttaqueBoss()
         {
@@ -40,7 +43,7 @@ namespace GrammaCast
             Actif = false;
             Final = false;
             Animation = false;
-            attack = rand.Next(spell.Length);
+            attack = rand.Next(spell.Length); //choisit aléatoirement l'attaque
             attaqueSpell = this.spell[attack];
 
         }
@@ -56,21 +59,24 @@ namespace GrammaCast
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //positionne la lettre en dessous du joueur pour plus de visibilité
             this.PositionAttaque = new Vector2(perso.PositionHero.X, perso.PositionHero.Y + 25);
-            if (golem.Actif)
+            if (golem.Actif) //des que le boss est actif on peut lancer des attaques
             {
                 this.ProchaineAttaque(gameTime);
             }
 
             if (this.Actif)
             {
+                //si c'est actif l'attaque est lancée
                 if (timerAttaque == null)
                 {
-                    timerAttaque = new Timer(1000);
+                    timerAttaque = new Timer(1000); //donne un timer pour calculer le temps que le joueur a mis pour écrire le sort
                 }
                 else
                     timerAttaque.AddTick(deltaSeconds);
-                spellcast = this.AttaqueSpell.ToCharArray();
+
+                spellcast = this.AttaqueSpell.ToCharArray(); //transforme le mot en tableau de char pour plus de faciliter a tester
                 
                 if (this.Final)
                 {                    
@@ -79,20 +85,23 @@ namespace GrammaCast
                     if (timerAnimation.AddTick(deltaSeconds) == false)
                     {
                         // Charge la prochaine attaque
-                        golem.hp -= point / timerAttaque.Tick;
+                        golem.hp -= point / timerAttaque.Tick; //reduit le nbr de pv du boss en fonction du temps mit pour écrire
 
                         timerAttaque = null;
                         this.Final = false;
                         this.Animation = false;
                         this.Actif = false;
                         timerProchaine = null;
+
+
+                        //aléatoirement un nouveau sort est choisi
                         attack = rand.Next(spell.Length);
                         this.AttaqueSpell = this.spell[attack];
                         this.AsAttackBoss = new AnimatedSprite(attaqueSprite[attack]);
                         indiceAttack = 0;
                     }
                 }
-                else
+                else //teste toute les lettres du tableau
                 {
                     if (indiceAttack < spellcast.Length)
                     this.GetLetter(spellcast[indiceAttack]);
@@ -138,6 +147,7 @@ namespace GrammaCast
         }
         public void GetLetter(char lettre)
         {
+            //permet de vérifier si la touche du clavier appuyée est la lettre indiquée à l'écran
             string letter = lettre.ToString();
             var keyboardState = Keyboard.GetState();
             var keys = keyboardState.GetPressedKeys();
@@ -158,6 +168,7 @@ namespace GrammaCast
         }      
         public void ProchaineAttaque(GameTime gt)
         {
+            //fait une pause entre les attaques
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;
             if (!this.Actif)
             {

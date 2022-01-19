@@ -11,29 +11,43 @@ namespace GrammaCast
     {
         public MapBoss map;
         public Hero hero;
+
         private AnimatedSprite asBoss;
         private AnimatedSprite asLaserLaunch;
         private AnimatedSprite asLaser;
         private AnimatedSprite asArm;
+
         private string path;
+
         public int maxHP = 10000;
         public float hp = 10000;
+
         public bool Actif;
         string animation = "idleéveilBoss";
+
         Timer timerEveil;
         Timer timerAttaque;
         Timer timerRepos;
         Timer timerDeath;
+
         public bool Dead;
+
+        //barre de vie
         Texture2D rectHp;
         int rect;
+
         Random rand = new Random();
-        bool Pret;
-        int x;
-        int y;
-        int animationRand;
-        int vitesse = 500;
+
+        bool Pret; //permet de savoir quand il peut lancer l'attaque
+
+        int x; //Position du laser aléatoire, définit dans le update
+        int y; //position du laser 
+
+        int animationRand; //animation random
+        int vitesse = 500; //vitesse du bras
+
         Vector2 positionBras;
+
         public Boss(string path, Vector2 positionBoss)
         {
             Path = path;
@@ -42,17 +56,23 @@ namespace GrammaCast
             Dead = false;
         }
 
+        // Charge les Sprites (visuel) du boss
         public void LoadContent(Microsoft.Xna.Framework.Content.ContentManager Content, GraphicsDevice gd)
         {
 
             SpriteSheet spriteSheet = Content.Load<SpriteSheet>(this.Path, new JsonContentLoader());
             this.ASBoss = new AnimatedSprite(spriteSheet);
+
             spriteSheet = Content.Load<SpriteSheet>("laserlaunchSprite.sf", new JsonContentLoader());
             this.ASLaserLaunch = new AnimatedSprite(spriteSheet);
+
             spriteSheet = Content.Load<SpriteSheet>("rayonmagiqueSprite.sf", new JsonContentLoader());
             this.ASLaser = new AnimatedSprite(spriteSheet);
+
             spriteSheet = Content.Load<SpriteSheet>("glowingarm1Sprite.sf", new JsonContentLoader());
             this.ASArm = new AnimatedSprite(spriteSheet);
+
+            //chargement de la barre de vie
             rectHp = new Texture2D(gd,gd.Viewport.Width, 10);
             Color[] data = new Color[gd.Viewport.Width * 10];
             for (int i = 0; i < data.Length; i++) data[i] = Color.Red;
@@ -62,9 +82,13 @@ namespace GrammaCast
         public void Update(GameTime gameTime, int windowWidth, int windowHeight)
         {
             y = windowHeight / 3;
+
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float vitesseBras = deltaSeconds * vitesse;
-            rect = (int)Math.Round(this.hp,0) * windowWidth / this.maxHP;
+
+            rect = (int)Math.Round(this.hp,0) * windowWidth / this.maxHP; //produit en croix pour la largeur de la 
+                                                                          //barre de vie
+
             if (map.Actif)
             {     
                 if (!this.Dead)

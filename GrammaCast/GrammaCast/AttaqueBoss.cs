@@ -10,9 +10,12 @@ using System;
 namespace GrammaCast
 {
     public class AttaqueBoss
-    {
+    { 
+        /* Représente une attaque du boss. Une attaque est composée d'un mot à écrire,
+        en utilisant la classe Attaque (donc lettre par lettre) */
         public static string[] spriteChemin = new string[] { "IceCastSprite.sf",
             "FireCastSprite.sf", "HolyExplosionSprite.sf", "IceShatterSprite.sf", "PoisonCastSprite.sf"};
+        // Mots possibles à écrire
         private string[] spell = new string[] { "FEUGLACIAL", "FEUENSORCELE", "EXPLOSIONDIVINE", "ECLATDEGLACE", "BRULUREDEPOISON" };
         private SpriteSheet[] attaqueSprite = new SpriteSheet[spriteChemin.Length];
         public Hero perso;
@@ -76,8 +79,8 @@ namespace GrammaCast
 
                     if (timerAnimation.AddTick(deltaSeconds) == false)
                     {
+                        // Charge la prochaine attaque
                         golem.hp -= point / timerAttaque.Tick;
-
                         timerAttaque = null;
                         this.Final = false;
                         this.Animation = false;
@@ -153,13 +156,7 @@ namespace GrammaCast
                 }
             }
         }
-        public bool NbrHP()
-        {
-            if (golem.hp >= 500)
-                return true;
-            else
-                return false;
-        }
+        // Gère l'attente avant la prochaine attaque
         public void ProchaineAttaque(GameTime gt)
         {
             float deltaSeconds = (float)gt.ElapsedGameTime.TotalSeconds;

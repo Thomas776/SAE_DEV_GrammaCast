@@ -144,8 +144,10 @@ namespace GrammaCast
                 default:
                     break;
             }
-
             // On détermine l'animation associée à ce déplacement
+
+
+            //collisions
             if (deplacement.X == 0 && deplacement.Y == -2)
             {
                 ushort tx = (ushort)(this.PositionVillageois.X / map.TileMap.TileWidth);

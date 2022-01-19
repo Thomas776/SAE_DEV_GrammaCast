@@ -51,7 +51,7 @@ namespace GrammaCast
             this.ASEnnemi = new AnimatedSprite(ennemiSprite[rand.Next(ennemiSprite.Length)]);
         }
 
-        // Met à jour le villageois
+        // Met à jour l'ennemi
         public void Update(GameTime gameTime, float windowWidth, float windowHeight)
         {
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -120,13 +120,13 @@ namespace GrammaCast
             get => vitesseEnnemi;
             private set => vitesseEnnemi = value;
         }
-        public bool Actif;
+        public bool Actif; //si l'ennemi est inactif il n'apparaitra pas
 
         /* Permet de bloquer le déplacement de l'ennemi
         cet attribut est actuellement utilisé pour bloquer l'ennemi s'il est proche du joueur*/
         public bool Block;
 
-        // Gère le déplacement du villageois et renvoi l'animation à lui donner pour ce déplacement
+        // Gère le déplacement de l'ennemi et renvois l'animation à lui donner pour ce déplacement
         private string Deplacement(GameTime gameTime)
         {
             string animation;
@@ -159,7 +159,7 @@ namespace GrammaCast
                 default:
                     break;
             }
-
+            //collisions
             if (deplacement.X == 0 && deplacement.Y == -2)
             {
 

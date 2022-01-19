@@ -44,6 +44,8 @@ namespace GrammaCast
             Actif = false;
             Final = false;
             Animation = false;
+
+            // On choisi une lettre au hasard 
             AttaqueLettre = this.alphabet[rand.Next(alphabet.Length)];
             
         }
@@ -170,7 +172,7 @@ namespace GrammaCast
                 }
             }
         }
-        
+
         public bool NbrPoint()
         {
             if (sommePoint >= 3000)

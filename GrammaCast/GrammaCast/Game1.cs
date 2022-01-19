@@ -56,7 +56,7 @@ namespace GrammaCast
         {
 
             // On charge les différentes maps
-            mapForet = new MapForet("ReBuild");
+            mapForet = new MapForet("Rebuild");
             mapVillage = new MapVillage[] { new MapVillage("LeHameau"), new MapVillage("LeHameau_2") };
             mapVillage[0].Actif = true; // Map de départ
             mapBoss = new MapBoss[] { new MapBoss("ZoneDeLaTour"), new MapBoss("ZoneFinale") };

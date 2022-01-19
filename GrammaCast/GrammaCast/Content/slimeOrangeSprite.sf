@@ -1,6 +1,6 @@
 {
   "textureAtlas": {
-    "texture": "slimeorange.png",
+    "texture": "slimeOrange.png",
     "regionWidth": 64,
     "regionHeight": 64
   },
